@@ -1,0 +1,37 @@
+{
+  "name": "@coolgk/api",
+  "version": "0.0.0",
+  "author": "Daniel Gong <daniel.k.gong@gmail.com>",
+  "homepage": "https://github.com/coolgk/api",
+  "bugs": {
+    "url": "https://github.com/coolgk/api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coolgk/api.git"
+  },
+  "description": "typescript mvc framework for node",
+  "keywords": [
+    "mvc"
+  ],
+  "dependencies": {
+    "@types/node": "^8.0.52"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-changed": "^3.1.1",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-typescript": "^3.2.3",
+    "merge2": "^1.2.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
+  },
+  "scripts": {
+    "prepublishOnly": "gulp prepublish",
+    "postpublish": "gulp postpublish",
+    "publish-dryrun": "tar -tf $(npm pack)"
+  },
+  "main": "./dist/js/index.js",
+  "types": "./dist/types/index.d.ts",
+  "license": "MIT"
+}
