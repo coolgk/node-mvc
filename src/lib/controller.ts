@@ -1,4 +1,5 @@
 import { DI, IServices } from './di';
+import { Response } from './response';
 
 export interface IConfig {
     [key: string]: any;
@@ -16,9 +17,10 @@ export class Controller extends DI {
 
     protected _options: IConfig;
 
-    constructor (options： IConfig = {}) {
+    constructor (options： IConfig = {}, response: Response) {
         super();
         this._options = options;
+        this._response = response;
     }
 
     public getRoutes (): IRoutes {

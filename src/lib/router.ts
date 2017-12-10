@@ -21,6 +21,9 @@ export class Router {
         this._options = options;
     }
 
+    /**
+     * 
+     */
     public async route (): Promise<IResponse> {
         // url = request.originalUrl
         const [, module, controller, action] = this._options.url.split('?').shift().split('/').map(
@@ -28,6 +31,7 @@ export class Router {
             (url) => (url || 'index').replace(/[^_a-zA-Z0-9\/]/g, '');
         );
 
+        const response = new Response();
         const controllerFile = `./modules/${module}/controllers/${controller}.js`.toLowerCase();
         const controllerExsits = await new Promise((resolve, reject) => {
             access(controllerFile, fs.constants.R_OK, (error) => resolve(error ? false : true));
@@ -41,10 +45,10 @@ export class Router {
 
             if (route && route[action] !== undefined && accessGranted && controllerInstance[action]) { // route allowed & action exists
                 await controllerInstance[action]();
-                return controllerInstance.getResponse();
+                return response.getResponse();
             }
         }
 
-        return 404;
+        return response.status(404, 'Not Found');
     }
 }

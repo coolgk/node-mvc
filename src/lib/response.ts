@@ -10,26 +10,26 @@ export interface IResponse {
 }
 
 export class Response {
-    
+
     private _response: IResponse;
 
     public getResponse(): IResponse {
         return this._response;
     }
 
-    protected _send(code: number, data: { [propName: string]: any }): void {
-        this._response = { code: 200, ...data };
+    public send(code: number, data: { [propName: string]: any }): IResponse {
+        return this._response = { code: 200, ...data };
     }
 
-    protected _json (json: any): void {
-        this._response = { code: 200, json };
+    public json (json: any): IResponse {
+        return this._response = { code: 200, json };
     }
 
-    protected _status (code: number, data: any): void {
-        this._response = { code, data };
+    public status (code: number, data: any = ''): IResponse {
+        return this._response = { code, data };
     }
 
-    protected _file (file: any): void {
-        this._response = { code: 200, file };
+    public file (file: any): IResponse {
+        return this._response = { code: 200, file };
     }
 }
