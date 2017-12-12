@@ -48,6 +48,34 @@ app.use((request, response, next) => {
         next
     });
     appRouter.route(request.originalUrl);
+
+    const session = ;
+
+    (new Router({
+        url: request.originalUrl,
+        method: request.method,
+        session: new Session({
+            redisClient: require('redis').createClient(config.redis),
+            secret: config.secret,
+            expiry: config.sessionMaxLife,
+            token: response.locals.cookie.get('accessToken') || (request.header('authorization') || '').replace(/^Bearer /, ''),
+            ip: request.ip,
+            cookie: {
+                set: (name: string, value: string): void => {
+                    response.cookie(name, value, {
+                        httpOnly: true,
+                        signed: true,
+                        secure: config.secureCookie,
+                        options.maxAge: config.sessionMaxLife || 0
+                    });
+                },
+                clear (): void {
+                    response.clearCookie(name);
+                }
+            }
+        })
+    })).route();
+
 });
 
 // ============= GLOBAL ERROR HANDLER (THIS DOES NOT CATCH UNHANDLED REJECTIONS)
