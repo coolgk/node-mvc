@@ -54,7 +54,7 @@ export default class Session extends Token {
     /**
      * @return {promise}
      */
-    public await destroy (): Promise<any> {
+    public async destroy (): Promise<any> {
         const destroyPromise = await super.destroy();
         if (this._cookie) {
             return this._cookie.clear(TOKEN_NAME);

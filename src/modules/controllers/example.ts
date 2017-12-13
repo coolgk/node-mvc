@@ -1,10 +1,8 @@
-'use strict';
+import { IRoutes, IPermissions, Controller } from './controller';
 
-// lowercase file name
+export default class Example extends Controller {
 
-class Example extends require('../../../core/controller.js') {
-
-    static getRoutes () {
+    public getRoutes (): IRoutes {
         return {
             GET: {
                 index: '',
@@ -22,16 +20,10 @@ class Example extends require('../../../core/controller.js') {
         };
     }
 
-    static _getServices () {
-        return {
-            exampleModel: new (require('../models/example.mongo.js'))(),
-            permission: new (require('../../../core/permission.js'))()
-        };
-    }
 
-    getPermissions () {
+    public getPermissions (): IPermissions {
         return {
-            // index: () => Promise.resolve(1),
+            index: () => Promise.resolve(true),
             // test: () => Promise.resolve(1),
             // csrf: (options) => {
                 // options.requireCsrfToken = false;
@@ -49,7 +41,7 @@ class Example extends require('../../../core/controller.js') {
 
             // }
         // );
-        return this._sendJson([this._params, this._get, this._post, this._session]);
+        this._response.json([this._params, this._get, this._post, this._session]);
     }
 
     test () {
@@ -59,6 +51,14 @@ class Example extends require('../../../core/controller.js') {
     csrf () {
         return this._sendJson([this._session]);
     }
+    
+    protected _getServices () {
+        return {
+            exampleModel: new (require('../models/example.mongo.js'))(),
+            permission: new (require('../../../core/permission.js'))()
+        };
+    }
+    
 }
 
 module.exports = Example;

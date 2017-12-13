@@ -3,7 +3,7 @@ export interface IServices {
     [key: string]: any;
 }
 
-export class DI {
+export default class DI {
     protected _services: IServices;
 
     constructor (): void {

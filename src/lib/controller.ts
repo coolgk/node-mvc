@@ -13,11 +13,11 @@ export interface IPermissions {
     [key: string]: Promise<boolean>;
 }
 
-export class Controller extends DI {
+export default class Controller extends DI {
 
     protected _options: IConfig;
 
-    constructor (options： IConfig = {}, response: Response) {
+    constructor (options: IConfig = {}, response: Response) {
         super();
         this._options = options;
         this._response = response;
@@ -28,10 +28,6 @@ export class Controller extends DI {
     }
 
     public getPermissions (): IPermissions {
-        return {};
-    }
-
-    public _getServices (): IServices {
         return {};
     }
 
