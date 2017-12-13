@@ -3,7 +3,7 @@ import { config as localConfig } from './config.local';
 
 export const config: IConfig = Object.assign(
     {
-        host: 'localhost',
+        host: null,
         port: 3000,
         sessionMaxLife: 7200000, // 2 hours 60 * 60 * 2 * 1000
         secret: 'to-be-overwritten-by-local-config',

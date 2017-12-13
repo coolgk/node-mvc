@@ -24,38 +24,99 @@ app.use(
 );
 
 // ============= SET UP POST VARIABLES
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+// app.use(bodyParser.json()); // for parsing application/json
+// app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
 
 // ============= SETUP COOKIE
 app.set('trust proxy', 1); // trust first proxy
 app.use(cookieParser(config.secret));
 
-// ============= SETUP UPLOADED FILES
-app.use((request, response, next) => {
-    const upload = multer({
-        dest: config.tmpFolder,
-        fileFilter: response.locals.fileFilter
-    });
-    app.locals.upload = new Proxy({}, {
-        get: (target: {}, property: string) => {
-            upload.single('file')(request, response, (error) => {
-                if (error) {
-                  // An error occurred when uploading
-                    return
-                }
-                // Everything went fine
-            })
-        }
-    });
-});
 
+
+import { createWriteStream } from 'fs';
+import * as Busboy from 'busboy';
 
 // ============= SETUP ROUTER
 app.use((request, response, next) => {
+    // ============= SETUP UPLOADED FILES
 
-console.log(response);
+    const contentType = request.get('content-type');
+    if (contentType == 'application/x-www-form-urlencoded' || contentType.indexOf('multipart/form-data') === 0) {
+        const busboy = new Busboy({ headers: request.headers });
+
+        const uploadedFiles = {};
+        busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+            if (!uploadedFiles[fieldname]) {
+                uploadedFiles[fieldname] = [];
+            }
+
+            const filepath = '/tmp/hhh';
+            let filesize = 0;
+            const writeableStream = createWriteStream(filepath);
+            file.on('data', (data) => {
+                filesize += data.length;
+                writeableStream.write(data);
+            });
+            file.on('end', () => {
+                writeableStream.end();
+              
+                uploadedFiles[fieldname].push({
+                    name: filename,
+                    encoding,
+                    mimetype,
+                    size: filesize
+                    path: filepath
+                });
+            });
+        });
+
+        const post = {};
+        busboy.on('field', (fieldname, value, fieldnameTruncated, valTruncated, encoding, mimetype) => {
+            if (post[fieldname]) {
+                if (post[fieldname] instanceof Array) {
+                    post[fieldname].push(value);
+                } else {
+                    post[fieldname] = [
+                        post[fieldname], value
+                    ];
+                }
+            } else {
+                post[fieldname] = value;
+            }
+        });
+
+        busboy.on('finish', () => {
+            console.log(uploadedFiles);
+
+            // for (let file of uploadedFiles.test) {
+                // file.move('/tmp/rrr')
+            // }
+
+            console.log(post);
+        });
+
+        request.pipe(busboy);
+
+    }
+
+    // const files = new Proxy(
+        // multer({dest: config.tmpFolder}),
+        // {
+            // get: (target: any, property: string) => {
+                // return new Promise((resolve, reject) => {
+                    // target.array(property, 50)(
+                        // request,
+                        // response,
+                        // (error) => error ? reject(error) : resolve(request.files)
+                    // );
+                // });
+            // }
+        // }
+    // );
+
+
     response.json([]);
+
     // (new Router({
         // url: request.originalUrl,
         // method: request.method,
@@ -92,9 +153,10 @@ process.on('unhandledRejection', (error) => {
 // ============= GLOBAL ERROR HANDLER (THIS DOES NOT CATCH UNHANDLED REJECTIONS)
 // next is an unused variable but required for this callback
 app.use((error, request, response, next) => { // eslint-disable-line no-unused-vars
+    console.error(error);
     response.sendStatus(500);
 });
 
 // ============= START SERVER
-const server = app.listen(config.port, '192.168.1.200');
+const server = app.listen(config.port, config.host);
 server.timeout = config.serverTimeout;
