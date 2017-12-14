@@ -15,6 +15,7 @@
     "mvc"
   ],
   "dependencies": {
+    "@coolgk/utils": "^1.0.0",
     "@types/body-parser": "^1.16.8",
     "@types/busboy": "^0.2.3",
     "@types/cookie-parser": "^1.4.1",

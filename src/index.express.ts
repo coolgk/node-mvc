@@ -35,15 +35,66 @@ app.use(cookieParser(config.secret));
 
 import { createWriteStream } from 'fs';
 import * as Busboy from 'busboy';
+import { toArray } from '@coolgk/utils/array';
+import { generateFile } from '@coolgk/utils/tmp';
 
 // ============= SETUP ROUTER
 app.use((request, response, next) => {
     // ============= SETUP UPLOADED FILES
 
+    const files = {
+        get: (names: string | string[], folder: string): Promise<{}> => {
+            const busboy = new Busboy({ headers: request.headers });
+
+            return new Promise((resolve) => {
+                const uploadedFiles = {};
+                busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+                    console.log(1111, filename);
+                    if (toArray(names).includes(fieldname)) {
+                        if (!uploadedFiles[fieldname]) {
+                            uploadedFiles[fieldname] = [];
+                        }
+                        generateFile({dir: folder, postfix: '', keep: true}).then(({ path }) => {
+                            
+
+                            let filesize = 0;
+                            const writeableStream = createWriteStream(path);
+                            file.on('data', (data) => {
+                                filesize += data.length;
+                                writeableStream.write(data);
+                            });
+                            file.on('end', () => {
+                                writeableStream.end();
+                                uploadedFiles[fieldname].push({
+                                    name: filename,
+                                    encoding,
+                                    mimetype,
+                                    size: filesize,
+                                    path: path
+                                });
+                            });
+                            
+                        });
+                    }
+                });
+                
+                busboy.on('finish', () => {
+                    resolve(uploadedFiles);
+                    console.log(uploadedFiles);
+                    // console.log(post);
+                });
+
+                request.pipe(busboy);
+            });
+
+        }
+    };
+
     const contentType = request.get('content-type');
     if (contentType == 'application/x-www-form-urlencoded' || contentType.indexOf('multipart/form-data') === 0) {
         const busboy = new Busboy({ headers: request.headers });
 
+/*
         const uploadedFiles = {};
         busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
             if (!uploadedFiles[fieldname]) {
@@ -59,7 +110,7 @@ app.use((request, response, next) => {
             });
             file.on('end', () => {
                 writeableStream.end();
-              
+
                 uploadedFiles[fieldname].push({
                     name: filename,
                     encoding,
@@ -68,6 +119,11 @@ app.use((request, response, next) => {
                     path: filepath
                 });
             });
+        });
+*/
+
+        busboy.on('file', (fieldname, file) => {
+            file.resume()
         });
 
         const post = {};
@@ -86,7 +142,7 @@ app.use((request, response, next) => {
         });
 
         busboy.on('finish', () => {
-            console.log(uploadedFiles);
+            // console.log(uploadedFiles);
 
             // for (let file of uploadedFiles.test) {
                 // file.move('/tmp/rrr')
@@ -98,7 +154,14 @@ app.use((request, response, next) => {
         request.pipe(busboy);
 
     }
-
+    
+    
+    setTimeout(async () => {
+        const f = await files.get('test', '/tmp');
+        console.log(f);
+        
+    }, 100)
+    
     // const files = new Proxy(
         // multer({dest: config.tmpFolder}),
         // {
