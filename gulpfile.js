@@ -8,6 +8,8 @@ const merge = require('merge2');
 const fs = require('fs');
 const path = require('path');
 // const jsdoc = require('gulp-jsdoc3');
+const header = require('gulp-header');
+
 
 const tsProject = ts.createProject('./tsconfig.json');
 
@@ -18,13 +20,14 @@ gulp.task('ts', () => {
         .pipe(
             changed(distFolder, {extension: '.js'})
         )
-        // .pipe(sourcemaps.init()) // This means sourcemaps will be generated
+        .pipe(sourcemaps.init()) // This means sourcemaps will be generated
         .pipe(tsProject());
 
     return merge([ // Merge the two output streams, so this task is finished when the IO of both operations is done.
         tsResult.dts.pipe(gulp.dest(`${distFolder}`)),
         tsResult.js
-        // .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
+        .pipe(header('require("source-map-support").install();'))
+        .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
         .pipe(gulp.dest(`${distFolder}`))
     ]);
 });
