@@ -6,21 +6,24 @@ export interface IConfig {
 }
 
 export interface IRoutes {
-    [key: string]: { [propName: string]: string };
+    [key: string]: {
+        [propName: string]: string
+    };
 }
 
 export interface IPermissions {
     [key: string]: Promise<boolean>;
 }
 
-export default class Controller extends DI {
+export class Controller extends DI {
 
     protected _options: IConfig;
 
-    constructor (options: IConfig = {}, response: Response) {
+    constructor (options: IConfig = {}, params: {[propName: any]: any} = {}, response?: Response) {
         super();
         this._options = options;
         this._response = response;
+        this._params = params;
     }
 
     public getRoutes (): IRoutes {
@@ -32,3 +35,5 @@ export default class Controller extends DI {
     }
 
 }
+
+export default

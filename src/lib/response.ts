@@ -1,35 +1,35 @@
-
 export interface IResponse {
     code: number;
-    json?: {};
+    json?: any;
+    data?: any;
     file?: {
-        filepath: string;
-        filename?: string;
+        filepath: string,
+        filename?: string
     };
-    [key: string]: any;
 }
 
 export class Response {
 
     private _response: IResponse;
 
-    public getResponse(): IResponse {
+    public getResponse (): IResponse {
         return this._response;
     }
 
-    public send(code: number, data: { [propName: string]: any }): IResponse {
-        return this._response = { code: 200, ...data };
+    public send (data: any, code: number = 200): IResponse {
+        return this._response = { data, code };
     }
 
-    public json (json: any): IResponse {
-        return this._response = { code: 200, json };
+    public json (json: any, code: number = 200): IResponse {
+        return this._response = { json, code };
     }
 
-    public status (code: number, data: any = ''): IResponse {
-        return this._response = { code, data };
+    public status (code: number): IResponse {
+        return this._response = { code };
     }
 
-    public file (file: any): IResponse {
-        return this._response = { code: 200, file };
+    public file (file: any, code: number = 200): IResponse {
+        return this._response = { file, code };
     }
+
 }

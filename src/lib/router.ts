@@ -1,20 +1,22 @@
 ﻿import { access } from 'fs';
 import { Response, IResponse } from './response';
+import { getParams } from '@coolgk/url';
 
 export interface IRouterConfig {
     url: string;
     method: string;
-    [key: string]: any;
+    urlParser?: (url: string, pattern: string) => {[propName: any]: any};
+    [key: any]: any;
 }
 
-export default class Router {
-
+export class Router {
     private _options: IRouterConfig;
 
     /**
-     * @param {string} url - request.originalUrl from expressjs
-     * @param {string} method - http request method GET POST etc.
-     * @param {string} accessToken - access token
+     * @param {object} options
+     * @param {string} options.url - request.originalUrl from expressjs
+     * @param {string} options.method - http request method GET POST etc.
+     * @param {function} [options.urlParser] - parser for getting url params e.g. for parsing patterns like /api/user/profile/:userId optional unless you need a more advanced parser
      */
     public constructor (options: IRouterConfig) {
         this._options = options;
@@ -24,27 +26,34 @@ export default class Router {
      * @return {promise}
      */
     public async route (): Promise<IResponse> {
-        // this._option.url = request.originalUrl from express
+        // this._option.url is "request.url" from node or "request.originalUrl" from express
         const [, module, controller, action] = this._options.url.split('?').shift().split('/').map(
-            // remove special characters for example . (dot) dodgy url: /portix/print.php?page=../../../../../../../../../etc/passwd
+            // remove special characters for example . (dot)
+            // dodgy url: /portix/print?page=../../../../../../../../../etc/passwd
             (url) => (url || 'index').replace(/[^_a-zA-Z0-9\/]/g, '')
         );
 
         const response = new Response();
         const controllerFile = `./modules/${module}/controllers/${controller}.js`.toLowerCase();
-        const controllerExsits = await new Promise((resolve, reject) => {
+        const controllerFileReadable = await new Promise((resolve, reject) => {
             access(controllerFile, fs.constants.R_OK, (error) => resolve(error ? false : true));
         });
 
-        if (controllerExsits) {
+        if (controllerFileReadable) {
             const controllerInstance = new (require(controllerFile))(this._options);
             const route = controllerInstance.getRoutes()[this._options.method];
 
             const permission = controllerInstance.getPermissions()[action] || controllerInstance.getPermissions()['*'];
-            const accessGranted = permission ? permission() : true;
+            const accessGranted = permission ? await permission() : false;
 
-            if (route && route[action] !== undefined && accessGranted && controllerInstance[action]) { // route allowed & action exists
-                await controllerInstance[action]();
+            const params = (this._options.urlParser || getParams)(
+                this._options.url,
+                `${module}/${controller}/${action}/${route[action]}`
+            );
+
+            // route allowed & permission granted & action exists
+            if (route && route[action] !== undefined && accessGranted && controllerInstance[action]) {
+                await controllerInstance[action](this._options, params, response);
                 return response.getResponse();
             }
         }
@@ -52,3 +61,5 @@ export default class Router {
         return response.status(404, 'Not Found');
     }
 }
+
+export default Router;
