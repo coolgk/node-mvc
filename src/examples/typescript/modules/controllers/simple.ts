@@ -31,7 +31,7 @@ export class Simple extends Controller {
         return this._sendJson([this._session]);
     }
 
-    protected _getServices () {
+    protected getServices () {
         return {
             exampleModel: new (require('../models/example.mongo.js'))(),
             permission: new (require('../../../core/permission.js'))()

@@ -10,7 +10,7 @@ export default class DI {
         this._services = this._getServices();
     }
 
-    protected _getServices (): IServices {
+    public getServices (): IServices {
         return {};
     }
 }
