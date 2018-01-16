@@ -5,8 +5,9 @@
         "outDir": "dist",
         "target": "ES2016",
         "module": "commonjs",
-        "pretty": true,
-        "removeComments": true,
+        "pretty": false,
+        "removeComments": false,
+        "inlineSourceMap": true,
         "strict": true
     },
     "include": [

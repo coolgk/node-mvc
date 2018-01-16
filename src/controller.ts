@@ -36,4 +36,4 @@ export class Controller extends DI {
 
 }
 
-export default
+export default Controller;
