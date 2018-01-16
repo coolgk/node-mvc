@@ -27,17 +27,11 @@ export class Simple extends Controller {
         this._options.response.json(this._params);
     }
 
-    csrf () {
-        return this._sendJson([this._session]);
-    }
-
     protected getServices () {
         return {
-            exampleModel: new (require('../models/example.mongo.js'))(),
-            permission: new (require('../../../core/permission.js'))()
+            // exampleModel: new (require('../models/example.mongo.js'))(),
+            // permission: new (require('../../../core/permission.js'))()
         };
     }
 
 }
-
-module.exports = Example;

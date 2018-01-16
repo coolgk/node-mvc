@@ -1,10 +1,6 @@
 import { DI, IServices } from './di';
 import { Response } from './response';
 
-export interface IConfig {
-    [key: string]: any;
-}
-
 export interface IRoutes {
     [key: string]: {
         [propName: string]: string
@@ -17,9 +13,11 @@ export interface IPermissions {
 
 export class Controller extends DI {
 
-    protected _options: IConfig;
+    protected _options: any;
+    protected _response: Response | undefined;
+    protected _params: {} = {};
 
-    constructor (options: IConfig = {}, params: {[propName: any]: any} = {}, response?: Response) {
+    constructor (options: any, params: object = {}, response?: Response) {
         super();
         this._options = options;
         this._response = response;

@@ -1,13 +1,12 @@
-
 export interface IServices {
     [key: string]: any;
 }
 
-export default class DI {
+export class DI {
     protected _services: IServices;
 
-    constructor (): void {
-        this._services = this._getServices();
+    constructor () {
+        this._services = this.getServices();
     }
 
     public getServices (): IServices {

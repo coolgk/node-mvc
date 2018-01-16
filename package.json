@@ -14,13 +14,18 @@
   "keywords": [
     "mvc"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@types/node": "^9.3.0",
+    "@coolgk/url": "^1.1.2"
+  },
   "devDependencies": {
+    "@types/express": "^4.11.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chalk": "^2.3.0",
     "coveralls": "^3.0.0",
     "del": "^3.0.0",
+    "express": "^4.16.2",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
     "gulp-sourcemaps": "^2.6.3",
@@ -42,8 +47,8 @@
     "scan": "nsp check",
     "tslint": "tslint --exclude src/test.ts src/**",
     "tsc": "tsc --project tsconfig.json",
-    "tsc:dev": "tsc --project tsconfig.dev.json"
-    "tsc:watch": "tsc --project tsconfig.dev.json -w"
+    "tsc:dev": "tsc --project tsconfig.dev.json",
+    "tsc:watch": "tsc --project tsconfig.dev.json -w --pretty"
   },
   "main": "./dist/js/index.js",
   "types": "./dist/types/index.d.ts",

@@ -1,3 +1,4 @@
+/*
 import { IConfig } from './config.interface';
 import { config as localConfig } from './config.local';
 
@@ -20,3 +21,4 @@ export const config: IConfig = Object.assign(
     },
     localConfig
 );
+*/

@@ -1,3 +1,4 @@
+/*
 import { config } from './config';
 
 import * as express from 'express';
@@ -77,3 +78,4 @@ app.use((error, request, response, next) => { // eslint-disable-line no-unused-v
 // ============= START SERVER
 const server = app.listen(config.port, config.host);
 server.timeout = config.serverTimeout;
+*/

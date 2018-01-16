@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 const config = require('./config.js');
 const logger = new (require('./core/loggers/logger.js'))();
 const router = new (require('./lib/router.js'))();
@@ -86,3 +86,4 @@ new (require('./lib/messageQueue.js'))({
 ).catch(
     (error) => logInternalError(error)
 );
+*/

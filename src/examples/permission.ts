@@ -1,6 +1,6 @@
 'use strict';
 
-class Permission extends require('./db/mongo.js') {
+// class Permission extends require('./db/mongo.js') {
     /*
     const _PERMISSIONS = [
         {
@@ -55,6 +55,8 @@ class Permission extends require('./db/mongo.js') {
         }
     ];
     */
+
+    /*
     constructor () {
         super();
         // this._setCollection(Permission.getCollectionName());
@@ -92,3 +94,4 @@ class Permission extends require('./db/mongo.js') {
 }
 
 module.exports = Permission;
+*/

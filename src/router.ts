@@ -1,12 +1,13 @@
-﻿import { access } from 'fs';
+﻿import { access, constants } from 'fs';
 import { Response, IResponse } from './response';
 import { getParams } from '@coolgk/url';
 
 export interface IRouterConfig {
     url: string;
     method: string;
-    urlParser?: (url: string, pattern: string) => {[propName: any]: any};
-    [key: any]: any;
+    urlParser?: (url: string, pattern: string) => object;
+    [key: string]: any;
+    [key: number]: any;
 }
 
 export class Router {
@@ -23,11 +24,11 @@ export class Router {
     }
 
     /**
-     * @return {promise}
+     * @return {promise} -
      */
     public async route (): Promise<IResponse> {
         // this._option.url is "request.url" from node or "request.originalUrl" from express
-        const [, module, controller, action] = this._options.url.split('?').shift().split('/').map(
+        const [, module, controller, action] = (this._options.url.split('?').shift() || '').split('/').map(
             // remove special characters for example . (dot)
             // dodgy url: /portix/print?page=../../../../../../../../../etc/passwd
             (url) => (url || 'index').replace(/[^_a-zA-Z0-9\/]/g, '')
@@ -36,7 +37,7 @@ export class Router {
         const response = new Response();
         const controllerFile = `./modules/${module}/controllers/${controller}.js`.toLowerCase();
         const controllerFileReadable = await new Promise((resolve, reject) => {
-            access(controllerFile, fs.constants.R_OK, (error) => resolve(error ? false : true));
+            access(controllerFile, constants.R_OK, (error) => resolve(error ? false : true));
         });
 
         if (controllerFileReadable) {
@@ -58,7 +59,7 @@ export class Router {
             }
         }
 
-        return response.status(404, 'Not Found');
+        return response.send('Not Found', 404);
     }
 }
 
