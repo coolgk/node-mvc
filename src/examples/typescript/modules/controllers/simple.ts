@@ -1,4 +1,4 @@
-import { IRoutes, IPermissions, Controller } from './controller';
+import { IRoutes, IPermissions, Controller } from '../../../../controller';
 
 export class Simple extends Controller {
 
@@ -27,7 +27,7 @@ export class Simple extends Controller {
         this._options.response.json(this._params);
     }
 
-    protected getServices () {
+    public getServices () {
         return {
             // exampleModel: new (require('../models/example.mongo.js'))(),
             // permission: new (require('../../../core/permission.js'))()

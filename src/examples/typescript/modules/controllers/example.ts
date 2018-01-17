@@ -1,4 +1,4 @@
-import { IRoutes, IPermissions, Controller } from './controller';
+/* import { IRoutes, IPermissions, Controller } from './controller';
 
 export default class Example extends Controller {
 
@@ -62,3 +62,4 @@ export default class Example extends Controller {
 }
 
 module.exports = Example;
+ */

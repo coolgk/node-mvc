@@ -8,7 +8,7 @@ export interface IRoutes {
 }
 
 export interface IPermissions {
-    [key: string]: Promise<boolean>;
+    [key: string]: () => Promise<boolean>;
 }
 
 export class Controller extends DI {

@@ -51,42 +51,6 @@ gulp.task('ts', ['index.ts'], () => {
 
 gulp.task('ts-dev', compileTsDev);
 
-gulp.task('pre-test', () => { // https://github.com/SBoudrias/gulp-istanbul
-    return gulp.src([`${distFolder}/*.js`])
-        .pipe(istanbul({
-            // includeUntested: true
-        }))
-        .pipe(istanbul.hookRequire());
-});
-
-gulp.task('test', ['pre-test'], () => {
-    return gulp.src('./test')
-        .pipe(
-            mocha({
-                ui: 'bdd',
-                reporter: 'spec',
-                exit: true
-            })
-        )
-        .pipe(
-            istanbul.writeReports({
-                dir: `./${distFolder}/coverage`,
-                reporters: ['text', 'html']
-            })
-        )
-        .pipe(
-            istanbul.enforceThresholds({
-                thresholds: {
-                    global: 80,
-                    each: 80
-                }
-            })
-        )
-        .once('error', () => {
-            process.exit(1);
-        });
-});
-
 gulp.task('publish', ['generate-all-packages'], () => {
     return new Promise((resolve) => {
         fs.readdir(packageFolder, (error, folders) => {
@@ -419,7 +383,3 @@ function consoleLogError(message) {
 }
 
 process.on('unhandledRejection', consoleLogError);
-
-gulp.task('watch', ['ts-dev'], () => {
-    gulp.watch('src/*.ts', ['ts-dev']);
-});
