@@ -5,10 +5,11 @@ export class Simple extends Controller {
     public getRoutes (): IRoutes {
         return {
             GET: {
-                index: ''
+                index: '', // allow GET request to index() method
+                user: ':id/:section' // access url param
             },
             POST: {
-                save: ''
+                save: '' // allow POST request to save() method
             }
         };
     }
