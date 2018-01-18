@@ -19,6 +19,8 @@
     "@coolgk/url": "^1.1.2"
   },
   "devDependencies": {
+    "@coolgk/jwt": "^1.1.4",
+    "@coolgk/token": "^1.1.4",
     "@types/express": "^4.11.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",

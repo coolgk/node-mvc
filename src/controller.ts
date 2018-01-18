@@ -1,5 +1,5 @@
 import { DI, IServices } from './di';
-import { Response } from './response';
+// import { Response } from './response';
 
 export interface IRoutes {
     [key: string]: {
@@ -8,20 +8,18 @@ export interface IRoutes {
 }
 
 export interface IPermissions {
-    [key: string]: () => Promise<boolean>;
+    [key: string]: () => Promise<boolean> | boolean;
 }
 
 export class Controller extends DI {
 
     protected _options: any;
-    protected _response: Response | undefined;
-    protected _params: {} = {};
+    // protected _response: Response | undefined;
+    // protected _params: {} = {};
 
-    constructor (options: any, params: object = {}, response?: Response) {
+    constructor (options: any) {
         super();
         this._options = options;
-        this._response = response;
-        this._params = params;
     }
 
     public getRoutes (): IRoutes {
