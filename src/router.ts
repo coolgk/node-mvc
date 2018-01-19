@@ -24,6 +24,7 @@ export class Router {
     }
 
     /**
+     * this method routes urls like /moduleName/controllerName/action/param1/params2 to file modules/modulename/controllers/controllerName.js
      * @return {promise} -
      */
     public async route (): Promise<IResponse> {
@@ -31,9 +32,15 @@ export class Router {
         let [, module, controller, action] = (this._options.url.split('?').shift() || '').split('/').map(
             // remove special characters for example . (dot)
             // dodgy url: /portix/print?page=../../../../../../../../../etc/passwd
-            (url) => (url || 'index').replace(/[^_a-zA-Z0-9\/]/g, '').toLocaleString();
+            // and convert hyphen separated words to camelCase e.g. no-access to noAccess
+            (url) => (url || 'index')
+                .replace(/[^_a-zA-Z0-9\-]/g, '')
+                .toLowerCase()
+                .split('-')
+                .map((string, index) => index ? string[0].toUpperCase() + string.substr(1) : string)
+                .join('')
         );
-console.log(22, action);
+
         if (!module) {
             module = 'index';
         }
@@ -59,7 +66,7 @@ console.log(22, action);
             const accessGranted = permission ? await permission() : false;
 
             if (!accessGranted) {
-                return response.send('Forbidden', 403);
+                return response.status(403, 'Forbidden');
             }
 
             const route = controllerInstance.getRoutes()[this._options.method];
@@ -70,12 +77,12 @@ console.log(22, action);
                     this._options.url,
                     `${module}/${controller}/${action}/${route[action]}`
                 );
-                await controllerInstance[action](params, response);
+                await controllerInstance[action]({params, response});
                 return response.getResponse();
             }
         }
 
-        return response.send('Not Found', 404);
+        return response.status(404, 'Not Found');
     }
 }
 

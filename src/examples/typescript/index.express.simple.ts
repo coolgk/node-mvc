@@ -16,10 +16,9 @@ app.use(async (request, response, next) => {
     const result = (await router.route());
 
     if (result && result.code) {
-        response.status(result.code).send(result.data);
+        response.status(result.code).send(result.status);
     }
 
-    next();
 });
 
 app.listen(3000);

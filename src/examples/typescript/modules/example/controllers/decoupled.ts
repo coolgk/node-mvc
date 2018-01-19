@@ -1,6 +1,7 @@
 import { IRoutes, IPermissions, Controller } from '../../../../../controller';
+import { IResponse } from '../../../../../response';
 
-export class Simple extends Controller {
+export class Decoupled extends Controller {
 
     public getRoutes (): IRoutes {
         return {
@@ -23,18 +24,18 @@ export class Simple extends Controller {
     }
 
     // GET /example/simple
-    index () {
-        this._options.response.json(['index']);
+    index ({response}: {response: IResponse}) {
+        response.json(['index']);
     }
 
     // GET /example/simple/user/123/preference
-    user ({params}: {params: object}) {
-        this._options.response.json(params);
+    user ({params, response}: {params: object, response: IResponse}) {
+        response.json(params);
     }
 
     // POST /example/simple/internal
-    save () {
-        this._options.response.json(['save']);
+    save ({response}: {response: IResponse}) {
+        response.json(['save']);
     }
 
     // false returned in getPermissions()
@@ -53,4 +54,4 @@ export class Simple extends Controller {
 
 }
 
-export default Simple;
+export default Decoupled;

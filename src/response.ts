@@ -1,11 +1,12 @@
 export interface IResponse {
     code: number;
     json?: any;
-    data?: any;
+    status?: string;
     file?: {
-        filepath: string,
-        filename?: string
+        path: string,
+        name?: string
     };
+    [index: string]: any;
 }
 
 export class Response {
@@ -16,16 +17,16 @@ export class Response {
         return this._response;
     }
 
-    public send (data: any, code: number = 200): IResponse {
-        return this._response = { data, code };
+    public send (data: {[propName: string]: any}, code: number = 200): IResponse {
+        return this._response = { ...data, code };
     }
 
     public json (json: any, code: number = 200): IResponse {
         return this._response = { json, code };
     }
 
-    public status (code: number): IResponse {
-        return this._response = { code };
+    public status (code: number, status: string): IResponse {
+        return this._response = { code, status };
     }
 
     public file (file: any, code: number = 200): IResponse {
