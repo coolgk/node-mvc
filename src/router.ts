@@ -6,12 +6,21 @@ export interface IRouterConfig {
     url: string;
     method: string;
     urlParser?: (url: string, pattern: string) => object;
+    require?: (file: string) => any;
     [key: string]: any;
     [key: number]: any;
 }
 
+export interface IModuleControllerAction {
+    module: string;
+    controller: string;
+    action: string;
+}
+
 export class Router {
     private _options: IRouterConfig;
+    private _require: (file: string) => any | undefined;
+    private _moduleControllerAction: IModuleControllerAction;
 
     /**
      * @param {object} options
@@ -21,6 +30,7 @@ export class Router {
      */
     public constructor (options: IRouterConfig) {
         this._options = options;
+        this._require = options.require || (require.main ? require.main.require : () => Object);
     }
 
     /**
@@ -28,6 +38,41 @@ export class Router {
      * @return {promise} -
      */
     public async route (): Promise<IResponse> {
+        const {module, controller, action} = this.getModuleControllerAction();
+
+        const response = new Response();
+        const controllerFile = `./modules/${module}/controllers/${controller}.js`.toLowerCase();
+        const controllerFileReadable = await new Promise((resolve, reject) => {
+            access(controllerFile, constants.R_OK, (error) => resolve(error ? false : true));
+        });
+
+        if (controllerFileReadable) {
+            const controllerInstance = new (this._require(controllerFile).default)(this._options);
+
+            const permission = controllerInstance.getPermissions()[action] || controllerInstance.getPermissions()['*'];
+            const accessGranted = permission ? await permission() : true;
+
+            if (!accessGranted) {
+                return response.status(403, 'Forbidden');
+            }
+
+            const route = controllerInstance.getRoutes()[this._options.method];
+
+            // route allowed & action exists
+            if (route && route[action] !== undefined && controllerInstance[action]) {
+                const params = (this._options.urlParser || getParams)(
+                    this._options.url,
+                    `${module}/${controller}/${action}/${route[action]}`
+                );
+                await controllerInstance[action]({params, response});
+                return response.getResponse();
+            }
+        }
+
+        return response.status(404, 'Not Found');
+    }
+
+    getModuleControllerAction (): IModuleControllerAction {
         // this._option.url is "request.url" from node or "request.originalUrl" from express
         let [, module, controller, action] = (this._options.url.split('?').shift() || '').split('/').map(
             // remove special characters for example . (dot)
@@ -53,37 +98,9 @@ export class Router {
             action = 'index';
         }
 
-        const response = new Response();
-        const controllerFile = `./modules/${module}/controllers/${controller}.js`.toLowerCase();
-        const controllerFileReadable = await new Promise((resolve, reject) => {
-            access(controllerFile, constants.R_OK, (error) => resolve(error ? false : true));
-        });
-
-        if (controllerFileReadable && require.main) {
-            const controllerInstance = new (require.main.require(controllerFile).default)(this._options);
-
-            const permission = controllerInstance.getPermissions()[action] || controllerInstance.getPermissions()['*'];
-            const accessGranted = permission ? await permission() : false;
-
-            if (!accessGranted) {
-                return response.status(403, 'Forbidden');
-            }
-
-            const route = controllerInstance.getRoutes()[this._options.method];
-
-            // route allowed & action exists
-            if (route && route[action] !== undefined && controllerInstance[action]) {
-                const params = (this._options.urlParser || getParams)(
-                    this._options.url,
-                    `${module}/${controller}/${action}/${route[action]}`
-                );
-                await controllerInstance[action]({params, response});
-                return response.getResponse();
-            }
-        }
-
-        return response.status(404, 'Not Found');
+        return {module, controller, action};
     }
+
 }
 
 export default Router;

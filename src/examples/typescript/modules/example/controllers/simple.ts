@@ -16,7 +16,7 @@ export class Simple extends Controller {
 
     public getPermissions (): IPermissions {
         return {
-            '*': () => true, // check permissions here
+            '*': () => true, // set permission for all methods, allow anyone to access all methods
             user: () => Promise.resolve(true), // e.g if logged in or have permission to access this url after logged in
             noAccess: () => false, // deny access
         };
