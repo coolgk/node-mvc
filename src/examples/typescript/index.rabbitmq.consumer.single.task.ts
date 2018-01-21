@@ -17,7 +17,10 @@ amqp.consume(
         return await router.route();
     },
     {
-        route: 'example.decoupled.save' // only consume the "save" action
+        exchangeName: 'direct',
+        exchangeType: 'direct',
+        fallbackExchange: 'defaultExchange',
+        routes: 'example.decoupled.save' // only consume the "index" action
     }
 );
 

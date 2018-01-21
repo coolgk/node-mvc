@@ -39,7 +39,8 @@ app.use(async (request, response, next) => {
         routerConfig,
         responseHandler,
         {
-            route: `${module}.${controller}.${action}`
+            routes: `${module}.${controller}.${action}`,
+            exchangeName: 'direct'
         }
     );
 

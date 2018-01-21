@@ -12,12 +12,9 @@ const amqp = new Amqp({
 // consume message and return (send) a response back to publisher
 amqp.consume(
     async (publisherMessage: IMessage) => {
-        console.log('consumer (index) received message', publisherMessage.message);
+        console.log('consumer (default) received message', publisherMessage.message);
         const router = new Router(publisherMessage.message);
         return await router.route();
-    },
-    {
-        route: 'example.decoupled.index' // only consume the "index" action
     }
 );
 
