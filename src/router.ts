@@ -1,6 +1,8 @@
 ﻿import { access, constants } from 'fs';
 import { Response, IResponse } from './response';
-import { getParams } from '@coolgk/url';
+import { getParams, IParams } from '@coolgk/url';
+
+export { IParams };
 
 export interface IRouterConfig {
     url: string;
@@ -60,7 +62,7 @@ export class Router {
 
             // route allowed & action exists
             if (route && route[action] !== undefined && controllerInstance[action]) {
-                const params = (this._options.urlParser || getParams)(
+                const params: IParams = (this._options.urlParser || getParams)(
                     this._options.url,
                     `${module}/${controller}/${action}/${route[action]}`
                 );

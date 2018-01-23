@@ -1,5 +1,5 @@
 import { IRoutes, IPermissions, Controller } from '../../../../../controller';
-import { IResponse } from '../../../../../response';
+import { Response } from '../../../../../response';
 
 export class Decoupled extends Controller {
 
@@ -25,12 +25,12 @@ export class Decoupled extends Controller {
     }
 
     // GET /example/decoupled
-    index ({response}: {response: IResponse}) {
+    public index ({response}: {response: Response}) {
         response.json(['index']);
     }
 
     // GET /example/decoupled/custom-data
-    customData ({response}: {response: IResponse}) {
+    public customData ({response}: {response: Response}) {
         response.send({
             anything: 1,
             can: 'text',
@@ -42,26 +42,26 @@ export class Decoupled extends Controller {
     }
 
     // GET /example/decoupled/user/123/preference
-    user ({params, response}: {params: object, response: IResponse}) {
+    public user ({params, response}: {params: object, response: Response}) {
         response.json(params);
     }
 
     // POST /example/decoupled/internal
-    save ({response}: {response: IResponse}) {
+    public save ({response}: {response: Response}) {
         response.json(['save']);
     }
 
     // false returned in getPermissions()
     // GET /example/decoupled/user/123/no-access
     // 403 Forbidden
-    noAccess () {
+    public noAccess () {
 
     }
 
     // Not defined in getRoutes()
     // GET /example/decoupled/internal
     // 404 Not Found
-    internal () {
+    private internal () {
 
     }
 

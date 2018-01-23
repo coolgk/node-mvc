@@ -1,10 +1,12 @@
+import { basename } from 'path';
+
 export interface IResponse {
     code: number;
     json?: any;
     status?: string;
     file?: {
-        path: string,
-        name?: string
+        path: string;
+        name?: string;
     };
     [index: string]: any;
 }
@@ -29,8 +31,14 @@ export class Response {
         return this._response = { code, status };
     }
 
-    public file (file: any, code: number = 200): IResponse {
-        return this._response = { file, code };
+    public file (path: string, name: string = '', code: number = 200): IResponse {
+        if (path) {
+            if (!name || String(name).trim() === '') {
+                name = basename(path);
+            }
+            return this._response = { file: { path, name }, code };
+        }
+        return this.status(404, 'File Not Found');
     }
 
 }

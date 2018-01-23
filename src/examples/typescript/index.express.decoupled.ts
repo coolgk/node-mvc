@@ -16,9 +16,9 @@ app.use(async (request, response, next) => {
 
     const result = (await router.route());
 
-    const responseSent = result.json && response.json(result.json)
-    || result.file && response.download(result.file.path, result.path.name)
-    || result.status && response.status(result.code).send(result.status);
+    const responseSent = result.json && (response.json(result.json) || 1)
+    || result.file && (response.download(result.file.path, result.file.name || '') || 1)
+    || result.status && (response.status(result.code).send(result.status) || 1);
 
     // handler custom response result
     responseSent || response.json(result);

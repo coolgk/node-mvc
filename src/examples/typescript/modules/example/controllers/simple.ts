@@ -1,4 +1,5 @@
 import { IRoutes, IPermissions, Controller } from '../../../../../controller';
+import { IParams } from '@coolgk/url';
 
 export class Simple extends Controller {
 
@@ -23,31 +24,31 @@ export class Simple extends Controller {
     }
 
     // GET /example/simple
-    index () {
+    public index () {
         this._options.response.json(['index']);
     }
 
     // GET /example/simple/user/123/preference
-    user ({params}: {params: object}) {
+    public user ({params}: {params: IParams}) {
         this._options.response.json(params);
     }
 
     // POST /example/simple/internal
-    save () {
+    public save () {
         this._options.response.json(['save']);
     }
 
     // false returned in getPermissions()
     // GET /example/simple/user/123/no-access
     // 403 Forbidden
-    noAccess () {
+    public noAccess () {
 
     }
 
     // Not defined in getRoutes()
     // GET /example/simple/internal
     // 404 Not Found
-    internal () {
+    private internal () {
 
     }
 

@@ -4,7 +4,8 @@
 
 import * as express from 'express';
 import { Router } from '../../router';
-import { formdata } from '@coolgk/formdata';
+import { formData } from '@coolgk/formdata';
+import { config } from './config';
 
 const app = express();
 
@@ -15,14 +16,16 @@ app.use(async (request, response, next) => {
     const router = new Router({
         url: request.originalUrl,
         method: request.method,
-        formdata: formData(request)
+        formdata: formData(request, {dir: config.uploadDir}),
+        session: () => {},
+        config
     });
 
     const result = (await router.route());
 
-    const responseSent = result.json && response.json(result.json)
-    || result.file && response.download(result.file.path, result.path.name)
-    || result.status && response.status(result.code).send(result.status);
+    const responseSent = result.json && (response.json(result.json) || 1)
+    || result.file && (response.download(result.file.path, result.file.name || '') || 1)
+    || result.status && (response.status(result.code).send(result.status) || 1);
 
     // json, file and status are the only responses from this simple app
     // log error for anything else

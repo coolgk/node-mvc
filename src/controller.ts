@@ -1,25 +1,25 @@
-import { DI, IServices } from './di';
-// import { Response } from './response';
-
 export interface IRoutes {
     [key: string]: {
         [propName: string]: string
     };
 }
 
+export interface IServices {
+    [key: string]: any;
+}
+
 export interface IPermissions {
     [key: string]: () => Promise<boolean> | boolean;
 }
 
-export class Controller extends DI {
+export class Controller {
 
     protected _options: any;
-    // protected _response: Response | undefined;
-    // protected _params: {} = {};
+    protected _services: IServices;
 
     constructor (options: any) {
-        super();
         this._options = options;
+        this._services = this.getServices();
     }
 
     public getRoutes (): IRoutes {
@@ -27,6 +27,10 @@ export class Controller extends DI {
     }
 
     public getPermissions (): IPermissions {
+        return {};
+    }
+
+    public getServices (): IServices {
         return {};
     }
 
