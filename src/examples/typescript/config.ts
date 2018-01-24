@@ -12,7 +12,7 @@ export const config: IConfig = {
         url: process.env.AMQP_URL
     },
     redis: {
-        url: process.env.REDIS_URL,
+        host: process.env.REDIS_URL,
         password: process.env.REDIS_PASSWORD,
         port: process.env.REDIS_PORT
     },

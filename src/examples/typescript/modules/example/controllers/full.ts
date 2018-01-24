@@ -9,12 +9,12 @@ export class Full extends Controller {
     public getRoutes (): IRoutes {
         return {
             GET: {
-                index: '', // allow GET request to index() method
-                user: ':id', // parse url param
+                user: ':id', // allow GET request to user() method
                 downloadPhoto: ':userId'
             },
             POST: {
-                register: '' // allow POST request to register() method
+                register: '', // allow POST request to register() method
+                login: '' // allow POST request to register() method
             }
         };
     }
@@ -34,12 +34,15 @@ export class Full extends Controller {
         }
     }
 
-    public async login () {
+    public async login ({response}: {response: Response}) {
         const post = await this._options.formdata.getData();
         const loggedIn = await this._services.model.authUser({username: post.username, password: post.password});
 
         if (loggedIn) {
-            this._options.session.init({ ip: this._options.ip });
+            await this._options.session.init({ ip: this._options.ip });
+
+            await this._options.session.set('user', {username: post.username, password: post.password});
+            response.json(await this._options.session.getAll());
         }
     }
 

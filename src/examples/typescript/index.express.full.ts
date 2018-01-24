@@ -27,7 +27,7 @@ app.use(async (request, response, next) => {
         method: request.method,
         formdata: formData(request, {dir: config.uploadDir}),
         session: new Session({
-            redisClient: require('redis').createClient(config.redis),
+            redisClient: createClient(config.redis),
             secret: config.secret,
             expiry: config.sessionMaxLife,
             token: accessToken,

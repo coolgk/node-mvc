@@ -50,18 +50,17 @@ export class Router {
 
         if (controllerFileReadable) {
             const controllerInstance = new (this._require(controllerFile).default)(this._options);
-
-            const permission = controllerInstance.getPermissions()[action] || controllerInstance.getPermissions()['*'];
-            const accessGranted = permission ? await permission() : true;
-
-            if (!accessGranted) {
-                return response.status(403, 'Forbidden');
-            }
-
             const route = controllerInstance.getRoutes()[this._options.method];
 
             // route allowed & action exists
             if (route && route[action] !== undefined && controllerInstance[action]) {
+                const permission = controllerInstance.getPermissions()[action] || controllerInstance.getPermissions()['*'];
+                const accessGranted = permission ? await permission() : true;
+
+                if (!accessGranted) {
+                    return response.status(403, 'Forbidden');
+                }
+
                 const params: IParams = (this._options.urlParser || getParams)(
                     this._options.url,
                     `${module}/${controller}/${action}/${route[action]}`
