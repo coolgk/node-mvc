@@ -1,98 +1,111 @@
-// import { Token, IRedisClient } from '@coolgk/token';
-// import { Jwt } from '@coolgk/jwt';
-// import {Request } from 'express';
+import { Token, IRedisClient } from '@coolgk/token';
+import { Jwt, IPayload } from '@coolgk/jwt';
+import { Request } from 'express';
 
-// export interface ICookie {
-    // readonly set: (name: string, value: string) => void;
-    // readonly clear: (name: string) => void;
-// }
+export interface ICookie {
+    readonly set: (name: string, value: string) => void;
+    readonly clear: (name: string) => void;
+}
 
-// export interface IConfig {
-    // readonly redisClient: IRedisClient;
-    // readonly secret: string;
-    // readonly expiry: number;
-    // readonly token?: string;
-    // cookie?: ICookie;
-    // readonly ip?: string;
-    // readonly jwt?: Jwt;
-// }
+export interface IConfig {
+    readonly redisClient: IRedisClient;
+    readonly secret: string;
+    readonly expiry: number;
+    readonly token?: string;
+    cookie?: ICookie;
+}
 
-// export const SESSION_NAME = 'session';
-// export const TOKEN_NAME = 'accessToken';
+export interface ISignature {
+    [index: string]: any;
+}
 
-// export class Session extends Token {
+export const SESSION_NAME = 'session';
+export const COOKIE_NAME = 'accessToken';
 
-    // private _jwt: Jwt;
-    // private _ip: string = '';
-    // private _cookie: ICookie;
+export class Session extends Token {
 
-    // /**
-     // * @param {object} options
-     // * @param {object} redisClient -
-     // * @param {string} secret -
-     // * @param {expiry} [expiry=3600] -
-     // * @param {string} [token] - a previously generated token string
-     // * @param {string} [ip] -
-     // */
-    // public constructor (options: IConfig) {
-        // super({
-            // token: options.token,
-            // redisClient: options.redisClient,
-            // expiry: options.expiry || 3600,
-            // prefix: SESSION_NAME
-        // });
+    private _jwt: Jwt;
+    private _cookie: ICookie | undefined;
 
-        // this._jwt = new (options.jwt || Jwt)({secret: options.secret});
-        // this._ip = options.ip;
-        // this._cookie = options.cookie;
-    // }
+    /**
+     * @param {object} options
+     * @param {object} redisClient -
+     * @param {string} secret -
+     * @param {expiry} [expiry=3600] -
+     * @param {string} [token] - a previously generated token string
+     */
+    public constructor (options: IConfig) {
+        super({
+            token: options.token || '',
+            redisClient: options.redisClient,
+            expiry: options.expiry || 3600,
+            prefix: SESSION_NAME
+        });
 
-    // /**
-     // * @return {promise}
-     // */
-    // public async start (data): Promise<any> {
-        // this._token = jwt.generate({...data, ip: this._ip});
-        // const renewPromise = await this.renew();
-        // if (this._cookie) {
-            // return this._cookie.set(TOKEN_NAME, this.token);
-        // }
-        // return this._token;
-    // }
+        this._jwt = new Jwt({ secret: options.secret });
+        this._cookie = options.cookie;
+    }
 
-    // /**
-     // * @return {promise<any>}
-     // */
-    // public async destroy (): Promise<any> {
-        // const destroyPromise = await super.destroy();
-        // if (this._cookie) {
-            // return this._cookie.clear(TOKEN_NAME);
-        // }
-        // return this._token;
-    // }
+    /**
+     * @return {promise}
+     */
+    public init (signature: ISignature = {}): Promise<any> {
+        return this.start(signature);
+    }
 
-    // /**
-     // * @return {promise<boolean>}
-     // */
-    // public async verify (): Promise<boolean> {
-        // const tokenData = this._jwt.verify(this._token);
-        // if (this._ip && this._ip !== (tokenData.data || {}).ip) {
-            // return false;
-        // }
-        // return super.verify();
-    // }
+    /**
+     * @return {promise}
+     */
+    public rotate (signature: ISignature = {}): Promise<any> {
+        return this.start(signature);
+    }
 
-    // /**
-     // * @return {promise<boolean>}
-     // */
-    // public async verifyAndRenew () : Promise<boolean> {
-        // if (await this.verify()) {
-            // await this.renew();
-            // return true;
-        // }
-        // return false;
-    // }
+    /**
+     * @return {promise}
+     */
+    public async start (signature: ISignature = {}): Promise<any> {
+        this._token = this._jwt.generate({ signature });
+        await this.renew();
+        if (this._cookie) {
+            return this._cookie.set(COOKIE_NAME, this._token);
+        }
+        return this._token;
+    }
 
-// }
+    /**
+     * @return {promise<any>}
+     */
+    public async destroy (): Promise<any> {
+        const destroyPromise = await super.destroy();
+        if (this._cookie) {
+            return this._cookie.clear(COOKIE_NAME);
+        }
+        return this._token;
+    }
+
+    /**
+     * @return {promise<boolean>}
+     */
+    public async verify (signature: ISignature = {}): Promise<boolean> {
+        const tokenData = this._jwt.verify(this._token);
+        if (!tokenData || !tokenData.data || (tokenData.data as IPayload).signature !== JSON.stringify(signature)) {
+            return false;
+        }
+        return super.verify();
+    }
+
+    /**
+     * @return {promise<boolean>}
+     */
+    public async verifyAndRenew () : Promise<boolean> {
+        if (await this.verify()) {
+            await this.renew();
+            return true;
+        }
+        return false;
+    }
+
+}
 
 // export interface IExpressConfig extends IConfig {
     // httpOnly?: boolean;
@@ -123,4 +136,4 @@
     // }
 // }
 
-// export default Session;
+export default Session;

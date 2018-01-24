@@ -3,9 +3,15 @@
  */
 
 import * as express from 'express';
-import { Router } from '../../router';
 import { formData } from '@coolgk/formdata';
 import { config } from './config';
+import { createClient } from 'redis';
+import * as cookie from 'cookie';
+
+import { Router } from '../../router';
+
+
+import { Session, COOKIE_NAME } from '../../session';
 
 const app = express();
 
@@ -13,12 +19,33 @@ const app = express();
 
 app.use(async (request, response, next) => {
 
+    const cookies = cookie.parse(String(request.headers.cookie || ''));
+    const accessToken = cookies[COOKIE_NAME] || String(request.headers.authorization || '').replace(/^Bearer /, '');
+
     const router = new Router({
         url: request.originalUrl,
         method: request.method,
         formdata: formData(request, {dir: config.uploadDir}),
-        session: () => {},
-        config
+        session: new Session({
+            redisClient: require('redis').createClient(config.redis),
+            secret: config.secret,
+            expiry: config.sessionMaxLife,
+            token: accessToken,
+            cookie: {
+                set: (name: string, value: string): void => {
+                    response.cookie(name, value, {
+                        httpOnly: true,
+                        secure: config.secureCookie,
+                        maxAge: config.sessionMaxLife || 0
+                    });
+                },
+                clear (): void {
+                    response.clearCookie(name);
+                }
+            }
+        }),
+        config,
+        ip: request.ip
     });
 
     const result = (await router.route());

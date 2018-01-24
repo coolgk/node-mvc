@@ -3,6 +3,7 @@ export interface IConfig {
 }
 
 export const config: IConfig = {
+    secret: process.env.SECRET,
     host: 'localhost',
     port: 8000,
     uploadDir: __dirname + '/uploads',
@@ -14,5 +15,6 @@ export const config: IConfig = {
         url: process.env.REDIS_URL,
         password: process.env.REDIS_PASSWORD,
         port: process.env.REDIS_PORT
-    }
+    },
+    secureCookie: !!(process.env.SECURE_COOKIE || true)
 };

@@ -22,8 +22,7 @@ export class Full extends Controller {
     public getPermissions (): IPermissions {
         return {
             // set default permission for all methods, deny accessing all methods
-            // '*': () => this._options.session.verify(),
-            '*': () => false,
+            '*': () => this._options.session.verify(),
             register: () => true, // allow accessing register() method without logging in
             login: () => true // allow accessing login() method without logging in
         };
@@ -35,12 +34,12 @@ export class Full extends Controller {
         }
     }
 
-    public login () {
+    public async login () {
         const post = await this._options.formdata.getData();
         const loggedIn = await this._services.model.authUser({username: post.username, password: post.password});
-        
+
         if (loggedIn) {
-            // this._options.session.start();
+            this._options.session.init({ ip: this._options.ip });
         }
     }
 
