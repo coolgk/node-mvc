@@ -16,5 +16,5 @@ export const config: IConfig = {
         password: process.env.REDIS_PASSWORD,
         port: process.env.REDIS_PORT
     },
-    secureCookie: !!(process.env.SECURE_COOKIE || true)
+    secureCookie: process.env.SECURE_COOKIE !== '0'
 };

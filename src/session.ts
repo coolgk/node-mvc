@@ -26,6 +26,7 @@ export class Session extends Token {
 
     private _jwt: Jwt;
     private _cookie: ICookie | undefined;
+    private _sessionToken: string;
 
     /**
      * @param {object} options
@@ -64,12 +65,13 @@ export class Session extends Token {
      * @return {promise}
      */
     public async start (signature: ISignature = {}): Promise<any> {
-        this._token = this._jwt.generate({ signature });
+        this._sessionToken = this._jwt.generate({ signature });
+        this.setToken(this._sessionToken);
         await this.renew();
         if (this._cookie) {
-            return this._cookie.set(COOKIE_NAME, this._token);
+            await this._cookie.set(COOKIE_NAME, this._sessionToken);
         }
-        return this._token;
+        return this._sessionToken;
     }
 
     /**
@@ -80,14 +82,14 @@ export class Session extends Token {
         if (this._cookie) {
             return this._cookie.clear(COOKIE_NAME);
         }
-        return this._token;
+        return destroyPromise;
     }
 
     /**
      * @return {promise<boolean>}
      */
     public async verify (signature: ISignature = {}): Promise<boolean> {
-        const tokenData = this._jwt.verify(this._token);
+        const tokenData = this._jwt.verify(this._sessionToken);
         if (!tokenData || !tokenData.data || (tokenData.data as IPayload).signature !== JSON.stringify(signature)) {
             return false;
         }

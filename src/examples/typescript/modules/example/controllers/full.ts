@@ -39,10 +39,9 @@ export class Full extends Controller {
         const loggedIn = await this._services.model.authUser({username: post.username, password: post.password});
 
         if (loggedIn) {
-            await this._options.session.init({ ip: this._options.ip });
-
+            const accessToken = await this._options.session.init({ ip: this._options.ip });
             await this._options.session.set('user', {username: post.username, password: post.password});
-            response.json(await this._options.session.getAll());
+            response.json({ accessToken });
         }
     }
 
@@ -59,7 +58,7 @@ export class Full extends Controller {
     // GET /example/full/user/123
     public async user ({params, response}: {params: IParams, response: Response}) {
         const user = await this._services.model.getUser(params.id);
-        response.json(user);
+        response.json({ user, session: await this._options.session.getAll() });
     }
 
     public async downloadPhoto ({params, response}: {params: IParams, response: Response}) {
