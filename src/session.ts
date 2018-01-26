@@ -104,7 +104,7 @@ export class Session extends Token {
     /**
      * @return {promise<boolean>}
      */
-    public async verifyAndRenew () : Promise<boolean> {
+    public async verifyAndRenew (): Promise<boolean> {
         if (await this.verify()) {
             await this.renew();
             return true;

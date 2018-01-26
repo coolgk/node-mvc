@@ -10,7 +10,8 @@ export class Full extends Controller {
         return {
             GET: {
                 user: ':id', // allow GET request to user() method
-                downloadPhoto: ':userId'
+                downloadPhoto: ':userId',
+                login: ''
             },
             POST: {
                 register: '', // allow POST request to register() method
@@ -23,15 +24,15 @@ export class Full extends Controller {
         return {
             // set default permission for all methods, deny accessing all methods
             '*': () => this._options.session.verify({ ip: this._options.ip }),
-            register: () => true, // allow accessing register() method without logging in
-            login: () => true // allow accessing login() method without logging in
+            'register': () => true, // allow accessing register() method without logging in
+            'login': () => true // allow accessing login() method without logging in
         };
     }
 
     public getServices (): IServices {
         return {
             model: new (require('../models/full').Full)(this._options.config)
-        }
+        };
     }
 
     public async login ({response}: {response: Response}) {
@@ -43,6 +44,11 @@ export class Full extends Controller {
             await this._options.session.set('user', {username: post.username, password: post.password});
             response.json({ accessToken });
         }
+    }
+
+    public async logout ({response}: {response: Response}) {
+        await this._options.session.destroy();
+        response.json(1);
     }
 
     // POST /example/full/register
@@ -57,6 +63,10 @@ export class Full extends Controller {
 
     // GET /example/full/user/123
     public async user ({params, response}: {params: IParams, response: Response}) {
+        if (!params.id) {
+            response.json({error: 'missing user id'});
+            return;
+        }
         const user = await this._services.model.getUser(params.id);
         response.json({ user, session: await this._options.session.getAll() });
     }

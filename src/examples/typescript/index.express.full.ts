@@ -10,7 +10,6 @@ import * as cookie from 'cookie';
 
 import { Router } from '../../router';
 
-
 import { Session, COOKIE_NAME } from '../../session';
 
 const app = express();
@@ -36,7 +35,7 @@ app.use(async (request, response, next) => {
                     response.cookie(name, value, {
                         httpOnly: true,
                         secure: config.secureCookie,
-                        maxAge: config.sessionMaxLife || 0
+                        maxAge: config.sessionMaxLife * 1000 || 0
                     });
                 },
                 clear (): void {
@@ -58,7 +57,7 @@ app.use(async (request, response, next) => {
     // log error for anything else
     if (!responseSent) {
         // your custom error logger
-        console.error(result);
+        console.error(result); // tslint:disable-line
         response.status(500).send('Internal Server Error');
     }
 
@@ -68,5 +67,5 @@ app.listen(3000);
 
 process.on('unhandledRejection', (error) => {
     // your custom error logger
-    console.error(error);
+    console.error(error); // tslint:disable-line
 });
