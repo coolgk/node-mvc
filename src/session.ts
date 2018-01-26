@@ -1,18 +1,16 @@
 import { Token, IRedisClient } from '@coolgk/token';
 import { Jwt, IPayload } from '@coolgk/jwt';
-import { Request } from 'express';
-
-export interface ICookie {
-    readonly set: (name: string, value: string) => void;
-    readonly clear: (name: string) => void;
-}
+// import { Request, Response } from 'express';
+import { CookieSerializeOptions, serialize } from 'cookie';
+import { ServerResponse } from 'http';
 
 export interface IConfig {
     readonly redisClient: IRedisClient;
     readonly secret: string;
     readonly expiry: number;
     readonly token?: string;
-    cookie?: ICookie;
+    readonly cookie?: CookieSerializeOptions;
+    readonly response?: ServerResponse;
 }
 
 export interface ISignature {
@@ -25,8 +23,9 @@ export const COOKIE_NAME = 'accessToken';
 export class Session extends Token {
 
     private _jwt: Jwt;
-    private _cookie: ICookie | undefined;
     private _sessionToken: string;
+    private _cookie: CookieSerializeOptions | undefined;
+    private _response: ServerResponse | undefined;
 
     /**
      * @param {object} options
@@ -45,8 +44,12 @@ export class Session extends Token {
         });
 
         this._jwt = new Jwt({ secret: options.secret });
-        this._cookie = options.cookie;
         this._sessionToken = token;
+        this._cookie = options.cookie;
+        if (this._cookie) {
+            this._cookie.maxAge = options.expiry;
+        }
+        this._response = options.response;
     }
 
     /**
@@ -70,9 +73,6 @@ export class Session extends Token {
         this._sessionToken = this._jwt.generate({ signature });
         this.setToken(this._sessionToken);
         await this.renew();
-        if (this._cookie) {
-            await this._cookie.set(COOKIE_NAME, this._sessionToken);
-        }
         return this._sessionToken;
     }
 
@@ -81,8 +81,11 @@ export class Session extends Token {
      */
     public async destroy (): Promise<any> {
         const destroyPromise = await super.destroy();
-        if (this._cookie) {
-            return this._cookie.clear(COOKIE_NAME);
+        if (this._cookie && this._response) {
+            this._response.setHeader(
+                'Set-Cookie',
+                serialize(COOKIE_NAME, '', { ...this._cookie, maxAge: 0, expires: new Date()})
+            );
         }
         return destroyPromise;
     }
@@ -112,35 +115,15 @@ export class Session extends Token {
         return false;
     }
 
+    public async renew (expiry?: number): Promise<any> {
+        if (this._cookie && this._response) {
+            this._response.setHeader(
+                'Set-Cookie',
+                serialize(COOKIE_NAME, this._sessionToken, this._cookie)
+            );
+        }
+        return super.renew(expiry);
+    }
 }
-
-// export interface IExpressConfig extends IConfig {
-    // httpOnly?: boolean;
-    // signed?: boolean;
-    // secure?: boolean;
-    // requestFieldName?: string;
-// }
-
-// export const express = (options: IExpressConfig) => {
-    // return (request, response, next: () => void) => {
-        // if (!options.cookie) {
-            // options.cookie = {
-                // set: (name: string, value: string): void => {
-                    // response.cookie(name, value, {
-                        // httpOnly: options.httpOnly,
-                        // signed: options.signed,
-                        // secure: options.secure,
-                        // maxAge: options.expiry || 0
-                    // });
-                // },
-                // clear (): void {
-                    // response.clearCookie(name);
-                // }
-            // };
-        // }
-        // request[options.requestFieldName || 'session'] = new Session(options);
-        // next();
-    // }
-// }
 
 export default Session;
