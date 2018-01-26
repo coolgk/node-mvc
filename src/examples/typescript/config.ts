@@ -7,7 +7,7 @@ export const config: IConfig = {
     host: 'localhost',
     port: 8000,
     uploadDir: __dirname + '/uploads',
-    sessionMaxLife: 7200000,
+    sessionMaxLife: 7200,
     amqp: {
         url: process.env.AMQP_URL
     },

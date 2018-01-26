@@ -22,7 +22,7 @@ export class Full extends Controller {
     public getPermissions (): IPermissions {
         return {
             // set default permission for all methods, deny accessing all methods
-            '*': () => this._options.session.verify(),
+            '*': () => this._options.session.verify({ ip: this._options.ip }),
             register: () => true, // allow accessing register() method without logging in
             login: () => true // allow accessing login() method without logging in
         };

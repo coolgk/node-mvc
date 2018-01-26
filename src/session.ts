@@ -36,8 +36,9 @@ export class Session extends Token {
      * @param {string} [token] - a previously generated token string
      */
     public constructor (options: IConfig) {
+        const token = options.token || '';
         super({
-            token: options.token || '',
+            token,
             redisClient: options.redisClient,
             expiry: options.expiry || 3600,
             prefix: SESSION_NAME
@@ -45,6 +46,7 @@ export class Session extends Token {
 
         this._jwt = new Jwt({ secret: options.secret });
         this._cookie = options.cookie;
+        this._sessionToken = token;
     }
 
     /**
@@ -90,7 +92,10 @@ export class Session extends Token {
      */
     public async verify (signature: ISignature = {}): Promise<boolean> {
         const tokenData = this._jwt.verify(this._sessionToken);
-        if (!tokenData || !tokenData.data || (tokenData.data as IPayload).signature !== JSON.stringify(signature)) {
+        if (!tokenData
+            || !tokenData.data
+            || JSON.stringify((tokenData.data as IPayload).signature) !== JSON.stringify(signature)
+        ) {
             return false;
         }
         return super.verify();
