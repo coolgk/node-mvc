@@ -30,5 +30,5 @@ app.listen(3000);
 
 process.on('unhandledRejection', (error) => {
     // your custom error logger
-    console.error(error);
+    console.error(error); // tslint:disable-line
 });

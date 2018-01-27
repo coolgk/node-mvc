@@ -25,7 +25,7 @@ app.use(async (request, response, next) => {
     const { module, controller, action } = router.getModuleControllerAction();
 
     const responseHandler = (consumerResponse: IResponseMessage) => {
-        console.log('consumer replied: ', consumerResponse.responseMessage);
+        console.log('consumer replied: ', consumerResponse.responseMessage); // tslint:disable-line
         const result = consumerResponse.responseMessage;
 
         const responseSent = result.json && response.json(result.json)
@@ -51,5 +51,5 @@ app.listen(3000);
 
 process.on('unhandledRejection', (error) => {
     // your custom error logger
-    console.error(error);
+    console.error(error); // tslint:disable-line
 });

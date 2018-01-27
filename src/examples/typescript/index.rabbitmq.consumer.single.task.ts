@@ -12,7 +12,7 @@ const amqp = new Amqp({
 // consume message and return (send) a response back to publisher
 amqp.consume(
     async (publisherMessage: IMessage) => {
-        console.log('consumer (save) received message', publisherMessage.message);
+        console.log('consumer (save) received message', publisherMessage.message); // tslint:disable-line
         const router = new Router(publisherMessage.message);
         return await router.route();
     },
@@ -26,5 +26,5 @@ amqp.consume(
 
 process.on('unhandledRejection', (error) => {
     // your custom error logger
-    console.error(error);
+    console.error(error); // tslint:disable-line
 });

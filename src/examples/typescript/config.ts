@@ -11,7 +11,7 @@ export interface IConfig {
         host: string | undefined;
         password: string | undefined;
         port: number | undefined;
-    },
+    };
     secureCookie: boolean;
 }
 

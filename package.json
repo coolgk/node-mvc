@@ -54,7 +54,7 @@
   },
   "scripts": {
     "scan": "nsp check",
-    "tslint": "tslint --exclude src/test.ts src/**",
+    "tslint": "tslint --exclude src/test.ts src/**/*.ts",
     "tsc": "tsc --project tsconfig.json",
     "tsc:dev": "tsc --project tsconfig.dev.json",
     "tsc:watch": "tsc --project tsconfig.dev.json -w --pretty",
