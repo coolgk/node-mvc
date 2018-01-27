@@ -39,6 +39,12 @@ export class Full extends Controller {
      */
     public async login ({response, services}: IDependencies) {
         const post = await this._options.formdata.getData();
+
+        if (!post.username || !post.password) {
+            response.json({error: 'username and password are required'});
+            return;
+        }
+
         const loggedIn = await services.model.authUser({username: post.username, password: post.password});
 
         if (loggedIn) {
