@@ -16,6 +16,7 @@ app.use(async (request, response, next) => {
     });
 
     const routerConfig = {
+        rootDir: __dirname,
         url: request.originalUrl,
         method: request.method
     };

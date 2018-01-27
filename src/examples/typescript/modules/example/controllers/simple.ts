@@ -1,5 +1,4 @@
-import { IRoutes, IPermissions, Controller } from '../../../../../controller';
-import { IParams } from '@coolgk/url';
+import { IRoutes, IPermissions, Controller, IDependencies } from '../../../../../controller';
 
 export class Simple extends Controller {
 
@@ -29,7 +28,7 @@ export class Simple extends Controller {
     }
 
     // GET /example/simple/user/123/preference
-    public user ({params}: {params: IParams}) {
+    public user ({params}: IDependencies) {
         this._options.response.json(params);
     }
 

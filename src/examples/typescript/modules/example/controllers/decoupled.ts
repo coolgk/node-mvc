@@ -1,5 +1,4 @@
-import { IRoutes, IPermissions, Controller } from '../../../../../controller';
-import { Response } from '../../../../../response';
+import { IRoutes, IPermissions, Controller, IDependencies } from '../../../../../controller';
 
 export class Decoupled extends Controller {
 
@@ -25,12 +24,12 @@ export class Decoupled extends Controller {
     }
 
     // GET /example/decoupled
-    public index ({response}: {response: Response}) {
+    public index ({response}: IDependencies) {
         response.json(['index']);
     }
 
     // GET /example/decoupled/custom-data
-    public customData ({response}: {response: Response}) {
+    public customData ({response}: IDependencies) {
         response.send({
             anything: 1,
             can: 'text',
@@ -42,12 +41,12 @@ export class Decoupled extends Controller {
     }
 
     // GET /example/decoupled/user/123/preference
-    public user ({params, response}: {params: object, response: Response}) {
+    public user ({params, response}: IDependencies) {
         response.json(params);
     }
 
     // POST /example/decoupled/internal
-    public save ({response}: {response: Response}) {
+    public save ({response}: IDependencies) {
         response.json(['save']);
     }
 

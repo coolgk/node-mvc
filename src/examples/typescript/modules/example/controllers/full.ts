@@ -33,6 +33,10 @@ export class Full extends Controller {
         };
     }
 
+    /**
+     *
+     * @param param0
+     */
     public async login ({response, services}: IDependencies) {
         const post = await this._options.formdata.getData();
         const loggedIn = await services.model.authUser({username: post.username, password: post.password});
