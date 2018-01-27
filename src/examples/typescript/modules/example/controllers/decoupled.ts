@@ -19,8 +19,8 @@ export class Decoupled extends Controller {
     public getPermissions (): IPermissions {
         return {
             '*': () => true, // set permission for all methods, allow anyone to access all methods
-            user: () => Promise.resolve(true), // e.g if logged in or have permission to access this url after logged in
-            noAccess: () => false, // deny access
+            'user': () => Promise.resolve(true), // e.g if logged in or have permission to access this url / method
+            'noAccess': () => false, // deny access
         };
     }
 
@@ -51,6 +51,7 @@ export class Decoupled extends Controller {
         response.json(['save']);
     }
 
+    /* tslint:disable */
     // false returned in getPermissions()
     // GET /example/decoupled/user/123/no-access
     // 403 Forbidden
@@ -64,7 +65,7 @@ export class Decoupled extends Controller {
     private internal () {
 
     }
-
+    /* tslint:enable */
 }
 
 export default Decoupled;

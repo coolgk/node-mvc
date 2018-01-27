@@ -1,3 +1,6 @@
+import { IParams } from '@coolgk/url';
+import { Response } from './response';
+
 export interface IRoutes {
     [key: string]: {
         [propName: string]: string
@@ -12,21 +15,25 @@ export interface IPermissions {
     [key: string]: () => Promise<boolean> | boolean;
 }
 
+export interface IDependencies {
+    params: IParams;
+    response: Response;
+    services: IServices;
+}
+
 export class Controller {
 
     protected _options: any;
-    protected _services: IServices;
 
     constructor (options: any) {
         this._options = options;
-        this._services = this.getServices();
     }
 
     public getRoutes (): IRoutes {
         return {};
     }
 
-    public getPermissions (): IPermissions {
+    public getPermissions (dependencies?: IDependencies): IPermissions {
         return {};
     }
 

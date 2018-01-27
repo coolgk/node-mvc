@@ -1,7 +1,5 @@
-import { IRoutes, IPermissions, Controller, IServices } from '../../../../../controller';
-import { Response } from '../../../../../response';
+import { IRoutes, IPermissions, Controller, IServices, IDependencies } from '../../../../../controller';
 import { INewUser, IExistingUser } from '../models/full';
-import { IParams } from '@coolgk/url';
 import { access, constants } from 'fs';
 
 export class Full extends Controller {
@@ -22,7 +20,7 @@ export class Full extends Controller {
 
     public getPermissions (): IPermissions {
         return {
-            // set default permission for all methods, deny accessing all methods
+            // set default permission for all methods, deny if not logged in
             '*': () => this._options.session.verify(),
             'register': () => true, // allow accessing register() method without logging in
             'login': () => true // allow accessing login() method without logging in
@@ -35,9 +33,9 @@ export class Full extends Controller {
         };
     }
 
-    public async login ({response}: {response: Response}) {
+    public async login ({response, services}: IDependencies) {
         const post = await this._options.formdata.getData();
-        const loggedIn = await this._services.model.authUser({username: post.username, password: post.password});
+        const loggedIn = await services.model.authUser({username: post.username, password: post.password});
 
         if (loggedIn) {
             const accessToken = await this._options.session.init();
@@ -46,14 +44,14 @@ export class Full extends Controller {
         }
     }
 
-    public async logout ({response}: {response: Response}) {
+    public async logout ({response}: IDependencies) {
         response.json(await this._options.session.destroy());
     }
 
     // POST /example/full/register
-    public async register ({response}: {response: Response}) {
+    public async register ({response, services}: IDependencies) {
         const post = await this._options.formdata.getData('photo');
-        const savedUser = await this._services.model.save({
+        const savedUser = await services.model.save({
             name: post.name,
             photo: post.photo
         });
@@ -61,17 +59,17 @@ export class Full extends Controller {
     }
 
     // GET /example/full/user/123
-    public async user ({params, response}: {params: IParams, response: Response}) {
+    public async user ({params, response, services}: IDependencies) {
         if (!params.id) {
             response.json({error: 'missing user id'});
             return;
         }
-        const user = await this._services.model.getUser(params.id);
+        const user = await services.model.getUser(params.id);
         response.json({ user, session: await this._options.session.getAll() });
     }
 
-    public async downloadPhoto ({params, response}: {params: IParams, response: Response}) {
-        const user = await this._services.model.getUser(params.userId);
+    public async downloadPhoto ({params, response, services}: IDependencies) {
+        const user = await services.model.getUser(params.userId);
 
         return new Promise((resolve) => {
             access(user.photo, constants.R_OK, (error) => {

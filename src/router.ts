@@ -1,6 +1,7 @@
 ﻿import { access, constants } from 'fs';
 import { Response, IResponse } from './response';
 import { getParams, IParams } from '@coolgk/url';
+import { IDependencies } from './controller';
 
 export { IParams };
 
@@ -24,21 +25,25 @@ export class Router {
     private _require: (file: string) => any | undefined;
     private _moduleControllerAction: IModuleControllerAction;
 
+    /* tslint:disable */
     /**
      * @param {object} options
      * @param {string} options.url - request.originalUrl from expressjs
      * @param {string} options.method - http request method GET POST etc.
      * @param {function} [options.urlParser] - parser for getting url params e.g. for parsing patterns like /api/user/profile/:userId optional unless you need a more advanced parser
      */
+    /* tslint:enable */
     public constructor (options: IRouterConfig) {
         this._options = options;
         this._require = options.require || (require.main ? require.main.require : () => Object);
     }
 
+    /* tslint:disable */
     /**
      * this method routes urls like /moduleName/controllerName/action/param1/params2 to file modules/modulename/controllers/controllerName.js
      * @return {promise} -
      */
+    /* tslint:enable */
     public async route (): Promise<IResponse> {
         const {module, controller, action} = this.getModuleControllerAction();
 
@@ -49,23 +54,28 @@ export class Router {
         });
 
         if (controllerFileReadable) {
-            const controllerInstance = new (this._require(controllerFile).default)(this._options);
-            const route = controllerInstance.getRoutes()[this._options.method];
+            const controllerObject = new (this._require(controllerFile).default)(this._options);
+            const route = controllerObject.getRoutes()[this._options.method];
 
             // route allowed & action exists
-            if (route && route[action] !== undefined && controllerInstance[action]) {
-                const permission = controllerInstance.getPermissions()[action] || controllerInstance.getPermissions()['*'];
-                const accessGranted = permission ? await permission() : true;
+            if (route && route[action] !== undefined && controllerObject[action]) {
+                const dependencies: IDependencies = {
+                    params: (this._options.urlParser || getParams)(
+                        this._options.url,
+                        `${module}/${controller}/${action}/${route[action]}`
+                    ),
+                    response,
+                    services: controllerObject.getServices()
+                };
+                const permission = controllerObject.getPermissions()[action] || controllerObject.getPermissions()['*'];
+                const accessGranted = permission ? await permission(dependencies) : true;
 
                 if (!accessGranted) {
                     return response.status(403, 'Forbidden');
                 }
 
-                const params: IParams = (this._options.urlParser || getParams)(
-                    this._options.url,
-                    `${module}/${controller}/${action}/${route[action]}`
-                );
-                await controllerInstance[action]({params, response});
+                await controllerObject[action](dependencies);
+
                 return response.getResponse();
             }
         }
@@ -73,7 +83,7 @@ export class Router {
         return response.status(404, 'Not Found');
     }
 
-    getModuleControllerAction (): IModuleControllerAction {
+    public getModuleControllerAction (): IModuleControllerAction {
         // this._option.url is "request.url" from node or "request.originalUrl" from express
         let [, module, controller, action] = (this._options.url.split('?').shift() || '').split('/').map(
             // remove special characters for example . (dot)
@@ -83,7 +93,7 @@ export class Router {
                 .replace(/[^_a-zA-Z0-9\-]/g, '')
                 .toLowerCase()
                 .split('-')
-                .map((string, index) => index ? string[0].toUpperCase() + string.substr(1) : string)
+                .map((text, index) => index ? text[0].toUpperCase() + text.substr(1) : text)
                 .join('')
         );
 

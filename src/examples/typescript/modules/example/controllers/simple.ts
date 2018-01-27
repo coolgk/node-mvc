@@ -18,8 +18,8 @@ export class Simple extends Controller {
     public getPermissions (): IPermissions {
         return {
             '*': () => true, // set permission for all methods, allow anyone to access all methods
-            user: () => Promise.resolve(true), // e.g if logged in or have permission to access this url after logged in
-            noAccess: () => false, // deny access
+            'user': () => Promise.resolve(true), // e.g if logged in or have permission to access this url / method
+            'noAccess': () => false, // deny access
         };
     }
 
@@ -38,6 +38,7 @@ export class Simple extends Controller {
         this._options.response.json(['save']);
     }
 
+    /* tslint:disable */
     // false returned in getPermissions()
     // GET /example/simple/user/123/no-access
     // 403 Forbidden
@@ -51,7 +52,7 @@ export class Simple extends Controller {
     private internal () {
 
     }
-
+    /* tslint:enable */
 }
 
 export default Simple;
