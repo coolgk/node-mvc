@@ -8,8 +8,8 @@ export { IParams };
 export interface IRouterConfig {
     url: string;
     method: string;
+    rootDir: string;
     urlParser?: (url: string, pattern: string) => object;
-    require?: (file: string) => any;
     [key: string]: any;
     [key: number]: any;
 }
@@ -22,20 +22,19 @@ export interface IModuleControllerAction {
 
 export class Router {
     private _options: IRouterConfig;
-    private _require: (file: string) => any | undefined;
     private _moduleControllerAction: IModuleControllerAction;
 
     /* tslint:disable */
     /**
      * @param {object} options
      * @param {string} options.url - request.originalUrl from expressjs
-     * @param {string} options.method - http request method GET POST etc.
+     * @param {string} options.method - http request method GET POST etc
+     * @param {string} options.rootDir - rood dir of the root
      * @param {function} [options.urlParser] - parser for getting url params e.g. for parsing patterns like /api/user/profile/:userId optional unless you need a more advanced parser
      */
     /* tslint:enable */
     public constructor (options: IRouterConfig) {
         this._options = options;
-        this._require = options.require || (require.main ? require.main.require : () => Object);
     }
 
     /* tslint:disable */
@@ -48,13 +47,13 @@ export class Router {
         const {module, controller, action} = this.getModuleControllerAction();
 
         const response = new Response();
-        const controllerFile = `./modules/${module}/controllers/${controller}.js`.toLowerCase();
+        const controllerFile = `${this._options.rootDir}/modules/${module}/controllers/${controller}.js`.toLowerCase();
         const controllerFileReadable = await new Promise((resolve, reject) => {
             access(controllerFile, constants.R_OK, (error) => resolve(error ? false : true));
         });
 
         if (controllerFileReadable) {
-            const controllerObject = new (this._require(controllerFile).default)(this._options);
+            const controllerObject = new (require(controllerFile).default)(this._options);
             const route = controllerObject.getRoutes()[this._options.method];
 
             // route allowed & action exists

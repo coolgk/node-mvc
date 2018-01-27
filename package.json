@@ -32,6 +32,7 @@
     "cookie": "^0.3.1",
     "coveralls": "^3.0.0",
     "del": "^3.0.0",
+    "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
@@ -56,9 +57,8 @@
     "tslint": "tslint --exclude src/test.ts src/**",
     "tsc": "tsc --project tsconfig.json",
     "tsc:dev": "tsc --project tsconfig.dev.json",
-    "tsc:watch": "tsc --project tsconfig.dev.json -w --pretty"
+    "tsc:watch": "tsc --project tsconfig.dev.json -w --pretty",
+    "debug": "nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy -r dotenv/config ./dist/examples/typescript/index.express.full.js"
   },
-  "main": "./dist/js/index.js",
-  "types": "./dist/types/index.d.ts",
   "license": "MIT"
 }

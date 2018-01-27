@@ -33,6 +33,7 @@ app.use(async (request, response, next) => {
     });
 
     const router = new Router({
+        rootDir: __dirname,
         url: request.originalUrl,
         method: request.method,
         formdata: formData(request, {dir: config.uploadDir}),

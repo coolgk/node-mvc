@@ -1,9 +1,22 @@
 export interface IConfig {
-    [index: string]: any;
+    secret: string;
+    host: string;
+    port: number;
+    uploadDir: string;
+    sessionMaxLife: number;
+    amqp: {
+        url: string | undefined;
+    };
+    redis: {
+        host: string | undefined;
+        password: string | undefined;
+        port: number | undefined;
+    },
+    secureCookie: boolean;
 }
 
 export const config: IConfig = {
-    secret: process.env.SECRET,
+    secret: process.env.SECRET || '',
     host: 'localhost',
     port: 8000,
     uploadDir: __dirname + '/uploads',
@@ -12,9 +25,9 @@ export const config: IConfig = {
         url: process.env.AMQP_URL
     },
     redis: {
-        host: process.env.REDIS_URL,
+        host: process.env.REDIS_HOST,
         password: process.env.REDIS_PASSWORD,
-        port: process.env.REDIS_PORT
+        port: Number(process.env.REDIS_PORT)
     },
     secureCookie: process.env.SECURE_COOKIE !== '0'
 };
