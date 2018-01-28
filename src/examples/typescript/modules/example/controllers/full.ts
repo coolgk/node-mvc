@@ -21,7 +21,7 @@ export class Full extends Controller {
     public getPermissions (): IPermissions {
         return {
             // set default permission for all methods, deny if not logged in
-            '*': () => this._options.session.verify(),
+            '*': () => this._options.session.verifyAndRenew(),
             'register': () => true, // allow accessing register() method without logging in
             'login': () => true // allow accessing login() method without logging in
         };
