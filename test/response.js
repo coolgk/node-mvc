@@ -21,10 +21,7 @@ describe('Response Module', function () {
     // afterEach(() => {});
     // after(() => {});
 
-    it('should have all base methods', () => {
-        // expect(controller).to.have.property('getRoutes').and.to.be.a('function');
-        // expect(controller).to.have.property('getPermissions').and.to.be.a('function');
-        // expect(controller).to.have.property('getServices').and.to.be.a('function');
+    it('should set responses', () => {
         const data = {a: 1, b: 2};
         response.send(data, 201);
         expect(response.getResponse()).to.deep.equal({ ...data, code: 201 });

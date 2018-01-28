@@ -16,20 +16,27 @@ describe('Router Module', function () {
 
     let router;
     let options;
-    const rootDir = '/tmp/router-test' + Math.random();
-    const module = 'module' + Math.random();
-    const controller = 'controller' + Math.random();
-    const action = 'action' + Math.random();
+    const rootDir = '/tmp/router-test' + (1000000 * Math.random()).toFixed(0);
+    const module = 'module' + (1000000 * Math.random()).toFixed(0);
+    const controller = 'controller' + (1000000 * Math.random()).toFixed(0);
+    const action = 'action' + (1000000 * Math.random()).toFixed(0);
     const controllerDir = `${rootDir}/modules/${module}/controllers`;
+    const controllerFile = `${controllerDir}/${controller}.js`;
 
-    before(() => {
+    before((done) => {
         options = {
-            url: `${module}/${controller}/${action}/param1?query=value&x=y`,
+            url: `/${module}/${controller}/${action}/param1?query=value&x=y`,
             method: 'GET',
             rootDir: rootDir
         };
         router = new Router(options);
-        return mkdirp(controllerDir);
+
+        mkdirp(controllerDir).then(() => {
+            fs.writeFile(controllerFile, getCode(), 'utf8', (error) => {
+                if (error) return done(data);
+                done();
+            });
+        });
     });
 
     // beforeEach(() => {});
@@ -39,12 +46,53 @@ describe('Router Module', function () {
         return del(rootDir, {force: true});
     });
 
-    it('should have all base methods', () => {
-
-
-        expect(router.getModuleControllerAction()).to.deep.equal({action: 'action1', module: 'module1', controller: 'controller1'});
-
-
+    it('should get action module controller from url', () => {
+        expect(router.getModuleControllerAction()).to.deep.equal({ action, module, controller });
     });
 
+    it('should call correct methods from url');
+
+    it('should allow and deny methods based on getRoutes()');
+
+    it('should allow and deny methods based on getPermissions()');
+
+    it('should pass all options to controllers constructor');
+
+    it('should pass params, services, response to methods');
+
+    function getCode () {
+        return `
+const { Controller } from '${__dirname + '/../dist/controller'}';
+
+export class Simple extends Controller {
+
+    getRoutes () {
+        return {
+            GET: {
+                index: '',
+                ${action}: ':id'
+            }
+        };
+    }
+
+    getPermissions () {
+        return {
+            '*': () => false
+            ${action}: () => Promise.resolve(true)
+        };
+    }
+
+    index () {
+
+    }
+
+    ${action} ({params}) {
+
+    }
+}
+
+export default Simple;
+        `;
+    }
 });
+
