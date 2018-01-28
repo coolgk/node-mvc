@@ -22,6 +22,7 @@
     "@coolgk/amqp": "^2.0.3",
     "@coolgk/formdata": "^2.0.3",
     "@coolgk/jwt": "^2.0.5",
+    "@coolgk/session": "^1.0.0",
     "@coolgk/token": "^2.0.3",
     "@types/cookie": "^0.3.1",
     "@types/express": "^4.11.0",
@@ -53,6 +54,9 @@
     "typescript": "^2.6.2"
   },
   "scripts": {
+    "pretest": "tsc --project tsconfig.dev.json",
+    "test": "export $(cat .env | xargs) && nyc mocha test",
+    "test:quick": "export $(cat .env | xargs) && mocha test",
     "scan": "nsp check",
     "tslint": "tslint --exclude src/test.ts src/**/*.ts",
     "tsc": "tsc --project tsconfig.json",

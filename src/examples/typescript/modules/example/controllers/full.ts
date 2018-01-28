@@ -1,4 +1,4 @@
-import { IRoutes, IPermissions, Controller, IServices, IDependencies } from '../../../../../controller';
+import { IRoutes, IPermissions, Controller, IDependencies } from '../../../../../controller';
 import { INewUser, IExistingUser } from '../models/full';
 import { access, constants } from 'fs';
 
@@ -27,7 +27,7 @@ export class Full extends Controller {
         };
     }
 
-    public getServices (): IServices {
+    public getServices (): any {
         return {
             model: new (require('../models/full').Full)(this._options.config)
         };

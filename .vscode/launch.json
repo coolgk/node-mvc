@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch",
+            "restart": true,
+            "envFile": "${workspaceFolder}/.env",
+            "skipFiles": [
+                "<node_internals>/**/*.js",
+                "${workspaceFolder}/node_modules/**/*.js"
+            ],
+            "outFiles": [
+                "dist/**/*.js"
+            ],
+            "program": "${workspaceFolder}/dist/examples/typescript/index.express.full.js",
+            "cwd": "${workspaceFolder}/dist/examples/typescript"
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach",
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ],
+            "address": "127.0.0.1",
+            "port": 9229,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/mnt/e/work/www/node-mvc",
+            "restart": true,
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "trace": true
+        }
+    ]
+}

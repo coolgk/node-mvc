@@ -10,7 +10,7 @@ import { parse } from 'cookie';
 
 import { Router } from '../../router';
 
-import { Session, COOKIE_NAME } from '../../session';
+import { Session, COOKIE_NAME } from '@coolgk/session';
 
 const app = express();
 
@@ -18,13 +18,11 @@ const app = express();
 
 app.use(async (request, response, next) => {
 
-    const cookies = parse(String(request.headers.cookie || ''));
-    const accessToken = cookies[COOKIE_NAME] || String(request.headers.authorization || '').replace(/^Bearer /, '');
     const session = new Session({
         redisClient: createClient(config.redis),
         secret: config.secret,
         expiry: config.sessionMaxLife,
-        token: accessToken,
+        request,
         response,
         cookie: {
             httpOnly: true,

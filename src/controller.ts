@@ -1,3 +1,7 @@
+/**
+ * base controller class
+ */
+
 import { IParams } from '@coolgk/url';
 import { Response } from './response';
 
@@ -7,10 +11,6 @@ export interface IRoutes {
     };
 }
 
-export interface IServices {
-    [key: string]: any;
-}
-
 export interface IPermissions {
     [key: string]: () => Promise<boolean> | boolean;
 }
@@ -18,26 +18,49 @@ export interface IPermissions {
 export interface IDependencies {
     params: IParams;
     response: Response;
-    services: IServices;
+    services: any;
 }
 
 export class Controller {
 
     protected _options: any;
 
+    /**
+     * Creates an instance of Controller.
+     * @param {*} options - any global dependencies to pass into controllers from the entry point
+     * @memberof Controller
+     */
     constructor (options: any) {
         this._options = options;
     }
 
+    /* tslint:disable */
+    /**
+     * @returns {object} - allowable routes to access controller methods. Format: { [HTTP_METHOD]: { [CLASS_METHOD_NAME]: [PARAM_PATTERN], ... } }
+     * @memberof Controller
+     */
+    /* tslint:enable */
     public getRoutes (): IRoutes {
         return {};
     }
 
+    /* tslint:disable */
+    /**
+     * @returns {object} - permission callback, which should return a boolean or Promise<boolean> value, for accessing controller methods. Format: { [CLASS_METHOD_NAME]: [CALLBACK], ... }
+     * @memberof Controller
+     */
+    /* tslint:enable */
     public getPermissions (dependencies?: IDependencies): IPermissions {
         return {};
     }
 
-    public getServices (): IServices {
+    /* tslint:disable */
+    /**
+     * @returns {object} - class dependencies which are passed into class methods as one of the arguments
+     * @memberof Controller
+     */
+    /* tslint:enable */
+    public getServices (): any {
         return {};
     }
 

@@ -29,7 +29,7 @@ export class Router {
      * @param {object} options
      * @param {string} options.url - request.originalUrl from expressjs
      * @param {string} options.method - http request method GET POST etc
-     * @param {string} options.rootDir - rood dir of the root
+     * @param {string} options.rootDir - rood dir of the app
      * @param {function} [options.urlParser] - parser for getting url params e.g. for parsing patterns like /api/user/profile/:userId optional unless you need a more advanced parser
      */
     /* tslint:enable */
