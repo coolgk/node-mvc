@@ -1,6 +1,6 @@
 {
-  "name": "@coolgk/node-mvc",
-  "version": "0.0.0",
+  "name": "@coolgk/mvc",
+  "version": "1.0.0",
   "author": "Daniel Gong <daniel.k.gong@gmail.com>",
   "homepage": "https://github.com/coolgk/node-mvc.git",
   "bugs": {
@@ -12,7 +12,9 @@
   },
   "description": "a simple typescript/javascript mvc framework for node",
   "keywords": [
-    "mvc"
+    "mvc",
+    "node framework",
+    "framework"
   ],
   "dependencies": {
     "@coolgk/url": "^2.0.5",
@@ -39,7 +41,6 @@
     "gulp-header": "^1.8.9",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^3.2.4",
-    "js-yaml": "^3.10.0",
     "jsdoc-to-markdown": "^3.0.4",
     "mkdirp-promise": "^5.0.1",
     "mocha": "^4.1.0",
