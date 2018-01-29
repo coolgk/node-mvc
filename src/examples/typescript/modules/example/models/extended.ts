@@ -9,7 +9,7 @@ export interface IExistingUser extends INewUser {
     _id: string;
 }
 
-export class Full {
+export class Extended {
 
     private _config: IConfig;
 
@@ -32,10 +32,10 @@ export class Full {
         return {
             _id: '5a0d6d152fff6d00c592aa9e',
             name: 'Daniel Gong',
-            photo: this._config.uploadDir + '/1516721380002388YH8xSdLtajJ4'
+            photo: this._config.uploadDir + '/15172676018296279OvFNrONRZp2w'
         };
     }
 
 }
 
-export default Full;
+export default Extended;

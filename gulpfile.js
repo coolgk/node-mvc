@@ -172,6 +172,7 @@ function createPackageJson () {
                 Object.assign(
                     packageJson,
                     {
+                        name: '@coolgk/mvc',
                         devDependencies: undefined,
                         scripts: undefined,
                         'pre-commit': undefined

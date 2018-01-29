@@ -1,5 +1,5 @@
 {
-  "name": "@coolgk/mvc",
+  "name": "@coolgk/node-mvc",
   "version": "1.0.0",
   "author": "Daniel Gong <daniel.k.gong@gmail.com>",
   "homepage": "https://github.com/coolgk/node-mvc.git",
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/coolgk/node-mvc.git"
   },
-  "description": "a simple typescript/javascript mvc framework for node",
+  "description": "A light javascript / typescript mvc framework that helps you to create object oriented, modulised and testable code",
   "keywords": [
     "mvc",
     "node framework",
@@ -24,6 +24,7 @@
     "@coolgk/amqp": "^2.0.3",
     "@coolgk/formdata": "^2.0.3",
     "@coolgk/jwt": "^2.0.5",
+    "@coolgk/mvc": "^1.0.0",
     "@coolgk/session": "^1.0.0",
     "@coolgk/token": "^2.0.3",
     "@types/cookie": "^0.3.1",
@@ -66,7 +67,8 @@
     "tsc:dev": "tsc --project tsconfig.debug.json",
     "tsc:watch": "tsc --project tsconfig.debug.json -w --pretty",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "debug:full": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.full.js",
+    "package": "gulp package",
+    "debug:extended": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.extended.js",
     "debug:simple": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.simple.js",
     "debug:decoupled": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.decoupled.js"
   },
