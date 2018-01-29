@@ -10,9 +10,6 @@
         "strict": true
     },
     "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "**/test.ts"
+        "src/*.ts"
     ]
 }

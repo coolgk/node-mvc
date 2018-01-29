@@ -5,15 +5,12 @@
         "outDir": "dist",
         "target": "ES2016",
         "module": "commonjs",
-        "pretty": false,
+        "pretty": true,
         "removeComments": false,
         "inlineSourceMap": true,
         "strict": true
     },
     "include": [
         "src/**/*"
-    ],
-    "exclude": [
-        "**/test.ts"
     ]
 }
