@@ -19,19 +19,16 @@ export interface IDependencies {
 
 /**
  * Base controller class
- * @export
- * @class Controller
  */
 export class Controller {
 
     protected _options: any;
 
     /**
-     * Creates an instance of Controller.
-     * @param {*} options - any global dependencies to pass into controllers from the entry point
+     * @param {*} [options] - any global dependencies to pass into controllers from the entry point
      * @memberof Controller
      */
-    constructor (options: any) {
+    constructor (options?: any) {
         this._options = options;
     }
 
@@ -47,7 +44,7 @@ export class Controller {
 
     /* tslint:disable */
     /**
-     * @returns {object} - permission callback, which should return a boolean or Promise<boolean> value, for accessing controller methods. Format: { [CLASS_METHOD_NAME]: [CALLBACK], ... }
+     * @returns {object} - a callback, which should return a boolean or Promise<boolean> value, for controlling the access of controller methods. Format: { [CLASS_METHOD_NAME]: [CALLBACK], ... }
      * @memberof Controller
      */
     /* tslint:enable */

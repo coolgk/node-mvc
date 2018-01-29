@@ -17,8 +17,6 @@ export enum ResponseError {
 
 /**
  * setting / getting standard responses in controllers
- * @export
- * @class Response
  */
 export class Response {
 

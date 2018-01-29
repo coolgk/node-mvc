@@ -41,14 +41,14 @@ async function generatePackage () {
     // recreate root README.md with README.BASE.md + jsdoc
     // cp README.md to /package
     await createReadme(jsDocs);
-/*     // generate index.ts
+    // generate index.ts
     await generateIndexFile();
     // compile ts
     await compileTs();
     // cp complied .js and d.ts files from dist/ to package/
     await copyFilesToPackage();
     // cp simplified package.json to package/
-    await createPackageJson(); */
+    await createPackageJson();
 }
 
 function createFolder (path) {
