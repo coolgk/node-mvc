@@ -74,7 +74,7 @@ export class Router {
                     services: controllerObject.getServices()
                 };
                 const permission = controllerObject.getPermissions()[action] || controllerObject.getPermissions()['*'];
-                const accessGranted = permission ? await permission(dependencies) : true;
+                const accessGranted = typeof(permission) === 'function' ? await permission(dependencies) : true;
 
                 if (!accessGranted) {
                     return response.status(403, RouterError.Forbidden_403);

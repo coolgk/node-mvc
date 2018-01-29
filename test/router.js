@@ -25,10 +25,20 @@ describe('Router Module', function () {
 
     before((done) => {
         mkdirp(controllerDir).then(() => {
-            fs.writeFile(controllerFile, getCode(), 'utf8', (error) => {
-                if (error) return done(data);
-                done();
-            });
+            Promise.all([
+                new Promise((resolve) => {
+                    fs.writeFile(controllerFile, getCode(), 'utf8', (error) => {
+                        if (error) return done(data);
+                        resolve();
+                    });
+                }),
+                new Promise((resolve) => {
+                    fs.writeFile(`${controllerDir}/${controller}noglobalpermission.js`, getCode(true), 'utf8', (error) => {
+                        if (error) return done(data);
+                        resolve();
+                    });
+                })
+            ]).then(() => done());
         });
     });
 
@@ -85,7 +95,26 @@ describe('Router Module', function () {
             method: 'GET',
             rootDir: rootDir
         });
-        return expect(router.route()).to.eventually.deep.equal({ code: 403, status: RouterError.Forbidden_403 });
+
+        // should hit global permission '*'
+        const router2 = new Router({
+            url: `/${module}/${controller}/global-permission`,
+            method: 'GET',
+            rootDir: rootDir
+        });
+
+        // should hit default permission when '*' is not set
+        const router3 = new Router({
+            url: `/${module}/${controller}noglobalpermission/global-permission`,
+            method: 'GET',
+            rootDir: rootDir
+        });
+
+        return Promise.all([
+            expect(router.route()).to.eventually.deep.equal({ code: 403, status: RouterError.Forbidden_403 }),
+            expect(router2.route()).to.eventually.deep.equal({ code: 403, status: RouterError.Forbidden_403 }),
+            expect(router3.route()).to.eventually.equal(undefined)
+        ]);
     });
 
     it('should pass params, services, response to methods', () => {
@@ -112,12 +141,40 @@ describe('Router Module', function () {
             method: 'POST',
             rootDir: rootDir
         });
-        expect(router.route()).to.eventually.equal(action);
+        return expect(router.route()).to.eventually.equal(action);
+    });
+
+    it('should show 404 if controller file does not exist', () => {
+        const router = new Router({
+            url: `/${module}/notThere`,
+            method: 'GET',
+            rootDir: rootDir
+        });
+        return expect(router.route()).to.eventually.deep.equal({ code: 404, status: RouterError.Not_Found_404 });
+    });
+
+    it('should hit default module controller view if url is empty', () => {
+        const router = new Router({
+            url: `?a=b`,
+            method: 'GET',
+            rootDir: rootDir
+        });
+
+        expect(router.getModuleControllerAction()).to.deep.equal({
+            action: 'index',
+            module: 'index',
+            controller: 'index',
+            originalAction: undefined,
+            originalModule: undefined,
+            originalController: undefined
+        });
+
+        return expect(router.route()).to.eventually.deep.equal({ code: 404, status: RouterError.Not_Found_404 });
     });
 
     // it('camelCase url should hit method');
 
-    function getCode () {
+    function getCode (noGlobalPermission) {
         return `
 const { Controller } = require('${__dirname + '/../dist/controller'}');
 
@@ -128,7 +185,8 @@ class Simple extends Controller {
             GET: {
                 index: '',
                 ${action}: '',
-                noAccess: ''
+                noAccess: '',
+                'globalPermission': ''
             },
             POST: {
                 withReturnValue: '',
@@ -139,7 +197,7 @@ class Simple extends Controller {
 
     getPermissions () {
         return {
-            '*': () => false,
+            ${noGlobalPermission ? '' : "'*': () => false,"}
             ${action}: () => Promise.resolve(true),
             withReturnValue: () => true,
             noAccess: () => false,
@@ -155,6 +213,10 @@ class Simple extends Controller {
     }
 
     index () {
+
+    }
+
+    globalPermission () {
 
     }
 
