@@ -50,7 +50,9 @@ describe('Router Module', function () {
         expect(router.getModuleControllerAction()).to.deep.equal({ action, module, controller });
     });
 
-    it('should call correct methods from url');
+    it('should call correct methods from url', () => {
+        router.route();
+    });
 
     it('should allow and deny methods based on getRoutes()');
 
@@ -86,8 +88,8 @@ export class Simple extends Controller {
 
     }
 
-    ${action} ({params}) {
-
+    ${action} () {
+        return '${action}';
     }
 }
 

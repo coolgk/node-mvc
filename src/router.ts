@@ -22,7 +22,6 @@ export interface IModuleControllerAction {
 
 export class Router {
     private _options: IRouterConfig;
-    private _moduleControllerAction: IModuleControllerAction;
 
     /* tslint:disable */
     /**
