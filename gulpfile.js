@@ -40,15 +40,15 @@ async function generatePackage () {
     const jsDocs = await generateJsDocMd();
     // recreate root README.md with README.BASE.md + jsdoc
     // cp README.md to /package
-    await createReadme(jsDoc);
-    // generate index.ts
+    await createReadme(jsDocs);
+/*     // generate index.ts
     await generateIndexFile();
     // compile ts
     await compileTs();
     // cp complied .js and d.ts files from dist/ to package/
     await copyFilesToPackage();
     // cp simplified package.json to package/
-    await createPackageJson();
+    await createPackageJson(); */
 }
 
 function createFolder (path) {
@@ -67,7 +67,7 @@ function compileTs (dev) {
         tsResult = tsResult.pipe(sourcemaps.init());
     }
 
-    tsResult.pipe(
+    tsResult = tsResult.pipe(
         ts.createProject('./tsconfig.json', { removeComments: !dev })()
     );
 
@@ -90,8 +90,9 @@ function compileTs (dev) {
     }
 
     promises.push(
-        tsResult.js.pipe(gulp.dest(distFolder))
-        .on('finish', () => resolve())
+        new Promise((resolve) => {
+            tsResult.js.pipe(gulp.dest(distFolder)).on('finish', () => resolve());
+        })
     );
 
     return Promise.all(promises);
@@ -101,15 +102,15 @@ async function generateJsDocMd () {
     await compileTs(true);
 
     return new Promise((resolve) => {
-        fs.readdir('src', (error, files) => {
+        fs.readdir('src', async (error, files) => {
             let jsDocs = '';
 
-            files.forEach((file) => {
+            for (const file of files) {
                 const name = file.replace('.ts', '');
-                if (!['index', 'test', 'globals.d'].includes(name)) {
+                if (!['index', 'test', 'globals.d', 'examples'].includes(name)) {
                     jsDocs += await jsdoc2md.render({ files: `${distFolder}/${name}.js` });
                 }
-            });
+            };
 
             resolve(jsDocs);
         });
@@ -136,7 +137,7 @@ function generateIndexFile () {
         fs.readdir('src', (error, files) => {
             files.forEach((file) => {
                 const filename = file.replace('.ts', '');
-                if (!['index', 'test', 'globals.d'].includes(filename)) {
+                if (!['index', 'test', 'globals.d', 'examples'].includes(filename)) {
                     writeStream.write(`import * as _${filename} from './${filename}';\n`);
                     writeStream.write(`export const ${filename} = _${filename}; // tslint:disable-line\n`);
                 }
@@ -148,7 +149,7 @@ function generateIndexFile () {
 }
 
 function copyFilesToPackage () {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         fs.readdir(distFolder, (error, files) => {
             const promises = [];
             files.forEach((file) => {

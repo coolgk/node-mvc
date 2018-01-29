@@ -77,14 +77,14 @@ export class Router {
                 const accessGranted = typeof(permission) === 'function' ? await permission(dependencies) : true;
 
                 if (!accessGranted) {
-                    return response.status(403, RouterError.Forbidden_403);
+                    return response.text(RouterError.Forbidden_403, 403);
                 }
 
                 return await controllerObject[action](dependencies) || response.getResponse();
             }
         }
 
-        return response.status(404, RouterError.Not_Found_404);
+        return response.text(RouterError.Not_Found_404, 404);
     }
 
     public getModuleControllerAction (): IModuleControllerAction {

@@ -35,8 +35,11 @@ describe('Response Module', function () {
         response.json(data);
         expect(response.getResponse()).to.deep.equal({ json: data, code: 200 });
 
-        response.status(203, 'message');
-        expect(response.getResponse()).to.deep.equal({ status: 'message', code: 203 });
+        response.text('message', 203);
+        expect(response.getResponse()).to.deep.equal({ text: 'message', code: 203 });
+
+        response.text('message');
+        expect(response.getResponse()).to.deep.equal({ text: 'message', code: 200 });
 
         let file = {
             path: Math.random(),
@@ -51,7 +54,7 @@ describe('Response Module', function () {
         expect(response.getResponse()).to.deep.equal({ file, code: 201 });
 
         response.file(undefined, file.name);
-        expect(response.getResponse()).to.deep.equal({ status: ResponseError.File_Not_Found, code: 404 });
+        expect(response.getResponse()).to.deep.equal({ text: ResponseError.File_Not_Found, code: 404 });
     });
 
 });

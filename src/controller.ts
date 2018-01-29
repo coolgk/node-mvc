@@ -1,7 +1,3 @@
-/**
- * base controller class
- */
-
 import { IParams } from '@coolgk/url';
 import { Response } from './response';
 
@@ -21,6 +17,11 @@ export interface IDependencies {
     services: any;
 }
 
+/**
+ * Base controller class
+ * @export
+ * @class Controller
+ */
 export class Controller {
 
     protected _options: any;

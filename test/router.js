@@ -85,7 +85,7 @@ describe('Router Module', function () {
 
         return Promise.all([
             expect(router2.route()).to.eventually.equal(undefined),
-            expect(router3.route()).to.eventually.deep.equal({ code: 404, status: RouterError.Not_Found_404 }),
+            expect(router3.route()).to.eventually.deep.equal({ code: 404, text: RouterError.Not_Found_404 }),
         ]);
     });
 
@@ -111,8 +111,8 @@ describe('Router Module', function () {
         });
 
         return Promise.all([
-            expect(router.route()).to.eventually.deep.equal({ code: 403, status: RouterError.Forbidden_403 }),
-            expect(router2.route()).to.eventually.deep.equal({ code: 403, status: RouterError.Forbidden_403 }),
+            expect(router.route()).to.eventually.deep.equal({ code: 403, text: RouterError.Forbidden_403 }),
+            expect(router2.route()).to.eventually.deep.equal({ code: 403, text: RouterError.Forbidden_403 }),
             expect(router3.route()).to.eventually.equal(undefined)
         ]);
     });
@@ -150,7 +150,7 @@ describe('Router Module', function () {
             method: 'GET',
             rootDir: rootDir
         });
-        return expect(router.route()).to.eventually.deep.equal({ code: 404, status: RouterError.Not_Found_404 });
+        return expect(router.route()).to.eventually.deep.equal({ code: 404, text: RouterError.Not_Found_404 });
     });
 
     it('should hit default module controller view if url is empty', () => {
@@ -169,7 +169,7 @@ describe('Router Module', function () {
             originalController: undefined
         });
 
-        return expect(router.route()).to.eventually.deep.equal({ code: 404, status: RouterError.Not_Found_404 });
+        return expect(router.route()).to.eventually.deep.equal({ code: 404, text: RouterError.Not_Found_404 });
     });
 
     // it('camelCase url should hit method');
