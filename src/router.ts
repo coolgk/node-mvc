@@ -9,7 +9,7 @@ export interface IRouterConfig {
     url: string;
     method: string;
     rootDir: string;
-    urlParser?: (url: string, pattern: string) => object;
+    urlParser?: (url: string, pattern: string) => IParams;
     [key: string]: any;
     [key: number]: any;
 }
@@ -18,6 +18,14 @@ export interface IModuleControllerAction {
     module: string;
     controller: string;
     action: string;
+    originalModule: string;
+    originalController: string;
+    originalAction: string;
+}
+
+export enum RouterError {
+    Not_Found_404 = 'Not Found',
+    Forbidden_403 = 'Forbidden'
 }
 
 export class Router {
@@ -39,11 +47,11 @@ export class Router {
     /* tslint:disable */
     /**
      * this method routes urls like /moduleName/controllerName/action/param1/params2 to file modules/modulename/controllers/controllerName.js
-     * @return {promise} -
+     * @return {promise} - returns a controller method's return value if the return value is not falsy otherwise returns standard response object genereated from the response methods called inside the controller methods e.g. response.json({...}), response.file(path, name) ...see code examples in decoupled.ts/js or full.ts/js
      */
     /* tslint:enable */
     public async route (): Promise<IResponse> {
-        const {module, controller, action} = this.getModuleControllerAction();
+        const { module, controller, action, originalModule, originalController, originalAction } = this.getModuleControllerAction();
 
         const response = new Response();
         const controllerFile = `${this._options.rootDir}/modules/${module}/controllers/${controller}.js`.toLowerCase();
@@ -60,7 +68,7 @@ export class Router {
                 const dependencies: IDependencies = {
                     params: (this._options.urlParser || getParams)(
                         this._options.url,
-                        `${module}/${controller}/${action}/${route[action]}`
+                        `${originalModule}/${originalController}/${originalAction}/${route[action]}`
                     ),
                     response,
                     services: controllerObject.getServices()
@@ -69,47 +77,47 @@ export class Router {
                 const accessGranted = permission ? await permission(dependencies) : true;
 
                 if (!accessGranted) {
-                    return response.status(403, 'Forbidden');
+                    return response.status(403, RouterError.Forbidden_403);
                 }
 
-                await controllerObject[action](dependencies);
-
-                return response.getResponse();
+                return await controllerObject[action](dependencies) || response.getResponse();
             }
         }
 
-        return response.status(404, 'Not Found');
+        return response.status(404, RouterError.Not_Found_404);
     }
 
     public getModuleControllerAction (): IModuleControllerAction {
         // this._option.url is "request.url" from node or "request.originalUrl" from express
-        let [, module, controller, action] = (this._options.url.split('?').shift() || '').split('/').map(
-            // remove special characters for example . (dot)
-            // dodgy url: /portix/print?page=../../../../../../../../../etc/passwd
-            // and convert hyphen separated words to camelCase e.g. no-access to noAccess
-            (url) => (url || 'index')
-                .replace(/[^_a-zA-Z0-9\-]/g, '')
-                .toLowerCase()
-                .split('-')
-                .map((text, index) => index ? text[0].toUpperCase() + text.substr(1) : text)
-                .join('')
-        );
+        const [, originalModule, originalController, originalAction] = (this._options.url.split('?').shift() || '').split('/');
 
-        if (!module) {
-            module = 'index';
-        }
-
-        if (!controller) {
-            controller = 'index';
-        }
-
-        if (!action) {
-            action = 'index';
-        }
-
-        return {module, controller, action};
+        return {
+            module: this._sanatise(originalModule),
+            controller: this._sanatise(originalController),
+            action: this._sanatise(originalAction),
+            originalModule,
+            originalController,
+            originalAction
+        };
     }
 
+    /**
+     * filter out malicious characters from the url e.g. . (dot) from /portix/print?page=../../../../../../../../../etc/passwd
+     * and convert hyphen-separated-case to camelCase e.g. no-access becomes noAccess
+     * @ignore
+     * @private
+     * @param {string} moduleControllerAction - original module, controller or action string from the url
+     * @returns {string}
+     * @memberof Router
+     */
+    private _sanatise (moduleControllerAction: string): string {
+        return (moduleControllerAction || 'index')
+            .replace(/[^_a-zA-Z0-9\-]/g, '')
+            .toLowerCase()
+            .split('-')
+            .map((text, index) => index ? text[0].toUpperCase() + text.substr(1) : text)
+            .join('');
+    }
 }
 
 export default Router;

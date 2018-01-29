@@ -11,7 +11,7 @@ export interface IResponse {
     [index: string]: any;
 }
 
-export enum IResponseError {
+export enum ResponseError {
     File_Not_Found = 'File Not Found'
 }
 
@@ -42,7 +42,7 @@ export class Response {
             }
             return this._response = { file: { path, name }, code };
         }
-        return this.status(404, IResponseError.File_Not_Found);
+        return this.status(404, ResponseError.File_Not_Found);
     }
 
 }

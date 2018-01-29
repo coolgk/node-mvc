@@ -23,7 +23,7 @@
         {
             "type": "node",
             "request": "attach",
-            "name": "Attach",
+            "name": "Attach WSL",
             "skipFiles": [
                 "<node_internals>/**/*.js"
             ],
@@ -31,6 +31,24 @@
             "port": 9229,
             "localRoot": "${workspaceFolder}",
             "remoteRoot": "/mnt/e/work/www/node-mvc",
+            "restart": true,
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "trace": true
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach VM",
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ],
+            "address": "172.17.128.211",
+            "port": 9229,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/var/www/npm/www/node-mvc",
             "restart": true,
             "sourceMaps": true,
             "outFiles": [

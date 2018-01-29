@@ -9,7 +9,7 @@ const expect = chai.expect;
 
 describe('Response Module', function () {
 
-    const { Response, IResponseError } = require(`../dist/response`);
+    const { Response, ResponseError } = require(`../dist/response`);
 
     let response;
 
@@ -51,7 +51,7 @@ describe('Response Module', function () {
         expect(response.getResponse()).to.deep.equal({ file, code: 201 });
 
         response.file(undefined, file.name);
-        expect(response.getResponse()).to.deep.equal({ status: IResponseError.File_Not_Found, code: 404 });
+        expect(response.getResponse()).to.deep.equal({ status: ResponseError.File_Not_Found, code: 404 });
     });
 
 });
