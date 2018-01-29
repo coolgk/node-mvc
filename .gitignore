@@ -1,0 +1,6 @@
+.env
+node_modules/
+dist/
+package/
+src/index.ts
+.nyc_output/
