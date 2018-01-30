@@ -12,7 +12,7 @@ import { config } from './config';
 // create an amqp (rabbitmq) instance
 // see @coolgk/amqp https://www.npmjs.com/package/@coolgk/amqp
 const amqp = new Amqp({
-    url: config.amqp.url
+    url: config.amqp.url || ''
 });
 
 // consume message and send (return) a response back to publisher

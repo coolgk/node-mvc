@@ -16,7 +16,7 @@ app.use(async (request, response, next) => {
     // create an amqp (rabbitmq) instance
     // see @coolgk/amqp https://www.npmjs.com/package/@coolgk/amqp
     const amqp = new Amqp({
-        url: config.amqp.url
+        url: config.amqp.url || ''
     });
 
     const routerConfig = {

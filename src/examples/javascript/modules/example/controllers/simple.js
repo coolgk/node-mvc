@@ -16,7 +16,8 @@ class Simple extends Controller {
         return {
             GET: {
                 index: '', // allow GET request to call the index() method
-                user: ':id/:section' // allow GET request to call the user() method and id, section are the parameters in url
+                user: ':id/:section', // allow GET request to call the user() method and id, section are the parameters in url
+                noAccess: '' // allow GET request (no-access) to call the noAccess() method
             },
             POST: {
                 save: '' // allow POST request to call the save() method
