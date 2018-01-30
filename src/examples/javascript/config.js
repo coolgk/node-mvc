@@ -1,4 +1,6 @@
-exports = {
+'use strict';
+
+exports.config = {
     secret: process.env.SECRET || '',
     host: 'localhost',
     port: 8000,

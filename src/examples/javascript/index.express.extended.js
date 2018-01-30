@@ -1,16 +1,17 @@
+'use strict';
 /**
  * an extended example of using the @coolgk/mvc framework with session and form data handlers
  */
-import * as express from 'express';
-import { createClient } from 'redis';
+const express = require('express');
+const { createClient } = require('redis');
 
-import { Router } from '@coolgk/mvc/router';
+const { Router } = require('@coolgk/mvc/router');
 
-import { formData } from '@coolgk/formdata';
-import { Session } from '@coolgk/session';
+const { formData } = require('@coolgk/formdata');
+const { Session } = require('@coolgk/session');
 
 // import app configurations
-import { config } from './config';
+const { config } = require('./config');
 
 const app = express();
 

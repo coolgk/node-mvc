@@ -1,8 +1,10 @@
+'use strict';
+
 /**
  * a simple example of using @coolgk/mvc framework for handling web requests
  */
-import * as express from 'express';
-import { Router } from '@coolgk/mvc/router';
+const express = require('express');
+const { Router } = require('@coolgk/mvc/router');
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use(async (request, response, next) => {
 
     // for handling 404 / 403 returned from the router
     result && result.code && response.status(result.code).send(result.text);
+
 });
 
 app.listen(3000);

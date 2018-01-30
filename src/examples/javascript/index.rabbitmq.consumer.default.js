@@ -1,13 +1,14 @@
+'use strict';
 /**
  * an example of using the @coolgk/mvc framework with rabbitMQ
  * a (catch all) message consumer for all tasks (routes)
  * single task consumers take precedence over this consumer
  * if a message's route cannot match single task consumers' routes, the message will be consumed by this consumer
  */
-import { Amqp, IMessage } from '@coolgk/amqp';
-import { Router } from '@coolgk/mvc/router';
+const { Amqp } = require('@coolgk/amqp');
+const { Router } = require('@coolgk/mvc/router');
 // import app configurations
-import { config } from './config';
+const { config } = require('./config');
 
 // create an amqp (rabbitmq) instance
 // see @coolgk/amqp https://www.npmjs.com/package/@coolgk/amqp
@@ -17,8 +18,8 @@ const amqp = new Amqp({
 
 // consume message and send (return) a response back to publisher
 amqp.consume(
-    async (publisherMessage: IMessage) => {
-        console.log('consumer (default) received message', publisherMessage.message); // tslint:disable-line
+    async (publisherMessage) => {
+        console.log('consumer (default) received message', publisherMessage.message); // eslint-disable-line
         const router = new Router(publisherMessage.message);
         return await router.route();
     }
@@ -26,5 +27,5 @@ amqp.consume(
 
 process.on('unhandledRejection', (error) => {
     // your custom error logger
-    console.error(error); // tslint:disable-line
+    console.error(error); // eslint-disable-line
 });
