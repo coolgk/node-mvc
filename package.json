@@ -24,7 +24,7 @@
     "@coolgk/amqp": "^2.0.3",
     "@coolgk/formdata": "^2.0.3",
     "@coolgk/jwt": "^2.0.5",
-    "@coolgk/mvc": "^1.0.0",
+    "@coolgk/mvc": "^1.0.1",
     "@coolgk/session": "^1.0.1",
     "@coolgk/token": "^2.0.3",
     "@types/cookie": "^0.3.1",
