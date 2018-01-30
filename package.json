@@ -1,6 +1,7 @@
 {
-  "name": "@coolgk/mvc",
-  "version": "1.0.0",
+
+  "name": "@coolgk/node-mvc",
+  "version": "1.0.1",
   "author": "Daniel Gong <daniel.k.gong@gmail.com>",
   "homepage": "https://github.com/coolgk/node-mvc.git",
   "bugs": {
@@ -10,7 +11,7 @@
     "type": "git",
     "url": "https://github.com/coolgk/node-mvc.git"
   },
-  "description": "a simple typescript/javascript mvc framework for node",
+  "description": "A light javascript / typescript mvc framework that helps you to create object oriented, modulised and testable code",
   "keywords": [
     "mvc",
     "node framework",
@@ -24,7 +25,8 @@
     "@coolgk/amqp": "^2.0.3",
     "@coolgk/formdata": "^2.0.3",
     "@coolgk/jwt": "^2.0.5",
-    "@coolgk/session": "^1.0.0",
+    "@coolgk/mvc": "^1.0.1",
+    "@coolgk/session": "^1.0.1",
     "@coolgk/token": "^2.0.3",
     "@types/cookie": "^0.3.1",
     "@types/express": "^4.11.0",
@@ -36,6 +38,7 @@
     "coveralls": "^3.0.0",
     "del": "^3.0.0",
     "eslint": "^4.16.0",
+    "eslint-config-google": "^0.9.1",
     "express": "^4.16.2",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
@@ -50,7 +53,7 @@
     "redis": "^2.8.0",
     "retire": "^1.4.0",
     "sinon": "^4.2.2",
-    "snyk": "^1.69.4",
+    "snyk": "^1.69.5",
     "source-map-support": "^0.5.3",
     "tslint": "^5.9.1",
     "typescript": "^2.6.2"
@@ -66,7 +69,8 @@
     "tsc:dev": "tsc --project tsconfig.debug.json",
     "tsc:watch": "tsc --project tsconfig.debug.json -w --pretty",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "debug:full": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.full.js",
+    "package": "gulp package",
+    "debug:extended": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.extended.js",
     "debug:simple": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.simple.js",
     "debug:decoupled": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.decoupled.js"
   },

@@ -11,6 +11,9 @@ const chalk = require('chalk');
 const del = require('del');
 const header = require('gulp-header');
 
+const childProcess = require('child_process');
+
+
 const packageJson = require('./package.json');
 
 const distFolder = 'dist';
@@ -172,6 +175,7 @@ function createPackageJson () {
                 Object.assign(
                     packageJson,
                     {
+                        name: '@coolgk/mvc',
                         devDependencies: undefined,
                         scripts: undefined,
                         'pre-commit': undefined
