@@ -1,7 +1,6 @@
 /**
- * an extended example of the @coolgk/mvc framework with session and form data handlers
+ * an extended example of using the @coolgk/mvc framework with session and form data handlers
  */
-
 import * as express from 'express';
 import { createClient } from 'redis';
 
@@ -47,6 +46,9 @@ app.use(async (request, response, next) => {
         ip: request.ip // pass ip address into router (controller methods)
     });
 
+    // router.route() returns the return value of the controller method if the return value is not falsy
+    // otherwise it returns an object from formatted by the "response" object (see the README file for @coolgk/mvc/response)
+    // e.g. { code: 200, text: 'SUCCESS' }, { code: 200, json: {...} }, { code: 200, file: { name: ..., path: ... } } etc.
     // this example uses the injected response object for setting up http responese in a standard format
     const result = (await router.route());
 

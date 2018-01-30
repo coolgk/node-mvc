@@ -1,29 +1,38 @@
 /**
- *
+ * an example controller using the @coolgk/mvc framework which decouples express from the main controller code
  */
-
 import * as express from 'express';
-import { Router } from '../../router';
+import { Router } from '@coolgk/mvc/router';
 
 const app = express();
 
 app.use(async (request, response, next) => {
 
+    // configure router with minimum setup
     const router = new Router({
         rootDir: __dirname,
         url: request.originalUrl,
         method: request.method
     });
 
+    // router.route() returns the return value of the controller method if the return value is not falsy
+    // otherwise it returns an object from formatted by the "response" object (see the README file for @coolgk/mvc/response)
+    // e.g. { code: 200, text: 'SUCCESS' }, { code: 200, json: {...} }, { code: 200, file: { name: ..., path: ... } } etc.
+    // this example uses the injected response object for setting up http responese in a standard format
     const result = (await router.route());
 
+    // handle session, file or text responses
     const responseSent = result.json && (response.json(result.json) || 1)
     || result.file && (response.download(result.file.path, result.file.name || '') || 1)
-    || result.status && (response.status(result.code).send(result.status) || 1);
+    || result.code && (response.status(result.code).send(result.text) || 1);
 
-    // handler custom response result
-    responseSent || response.json(result);
-
+    // json, file and text are the only valid responses from this simple app
+    // log error for anything else
+    if (!responseSent) {
+        // your custom error logger
+        console.error(result); // tslint:disable-line
+        response.status(500).send('Internal Server Error');
+    }
 });
 
 app.listen(3000);

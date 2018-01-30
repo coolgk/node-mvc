@@ -1,12 +1,15 @@
 /**
- * an example controller of @coolgk/mvc framework
+ * an example controller using the @coolgk/mvc framework
  */
 import { IRoutes, IPermissions, Controller, IDependencies } from '@coolgk/mvc/controller';
 import { INewUser, IExistingUser } from '../models/extended';
 import { access, constants } from 'fs';
 
+/**
+ * controller classes should extend the Controller class from @coolgk/mvc/controller
+ * you can also create your own base controller that extends @coolgk/mvc/controller
+ */
 export class Extended extends Controller {
-
     /**
      * setup valid routes to methods
      */
@@ -25,12 +28,12 @@ export class Extended extends Controller {
     }
 
     /**
-     * setup permissions for accessing methods
+     * setup permission callbacks for accessing methods
      */
     public getPermissions (): IPermissions {
         return {
-            // * is default permission for all methods in this class
-            // deny if not logged in otherwise renew session and allow access
+            // * the is default permission for all methods in this class
+            // deny if not logged in, otherwise renew session and allow access
             // see @coolgk/session https://www.npmjs.com/package/@coolgk/session
             '*': () => this._options.session.verifyAndRenew(),
             // skip session check for the register() method
@@ -52,6 +55,9 @@ export class Extended extends Controller {
     /**
      * HTTP Request:
      * POST /example/extended/login
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.response - reponse object injected by the router
+     * @param {*} dependencies.services - services from returned from getServices() injected by the router
      */
     public async login ({response, services}: IDependencies) {
         // get form data
@@ -79,6 +85,8 @@ export class Extended extends Controller {
     /**
      * HTTP Request:
      * GET /example/extended/logout
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.response - reponse object injected by the router
      */
     public async logout ({response}: IDependencies) {
         // kill the current session and set response
@@ -88,6 +96,9 @@ export class Extended extends Controller {
     /**
      * HTTP Request:
      * POST /example/extended/register
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.response - reponse object injected by the router
+     * @param {*} dependencies.services - services from returned from getServices() injected by the router
      */
     public async register ({response, services}: IDependencies) {
         // get posted data and uploaded file
@@ -107,6 +118,10 @@ export class Extended extends Controller {
     /**
      * HTTP Request:
      * GET /example/extended/user/1234
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.params - url param values configured in getRoutes()
+     * @param {object} dependencies.response - reponse object injected by the router
+     * @param {*} dependencies.services - services from returned from getServices() injected by the router
      */
     public async user ({params, response, services}: IDependencies) {
         // user() method has :id configured as a param in getRoutes()
@@ -125,6 +140,10 @@ export class Extended extends Controller {
     /**
      * HTTP Request:
      * GET /example/extended/download-photo
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.params - url param values configured in getRoutes()
+     * @param {object} dependencies.response - reponse object injected by the router
+     * @param {*} dependencies.services - services from returned from getServices() injected by the router
      */
     public async downloadPhoto ({params, response, services}: IDependencies) {
         // find the file path from model
