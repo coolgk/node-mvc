@@ -10,6 +10,7 @@ const jsdoc2md = require('jsdoc-to-markdown');
 const chalk = require('chalk');
 const del = require('del');
 const header = require('gulp-header');
+const childProcess = require('child_process');
 
 const packageJson = require('./package.json');
 
