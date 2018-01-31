@@ -55,7 +55,7 @@ setting / getting standard responses in controllers
     * [.send(data, [code])](#Response+send) ⇒ <code>object</code>
     * [.json(json, [code])](#Response+json) ⇒ <code>object</code>
     * [.text([text], code)](#Response+text) ⇒ <code>object</code>
-    * [.file(path, [name], [code])](#Response+file) ⇒ <code>object</code>
+    * [.file(path, [name], [type], [code])](#Response+file) ⇒ <code>object</code>
 
 <a name="Response+getResponse"></a>
 
@@ -103,7 +103,7 @@ set a http status response
 
 <a name="Response+file"></a>
 
-### response.file(path, [name], [code]) ⇒ <code>object</code>
+### response.file(path, [name], [type], [code]) ⇒ <code>object</code>
 set a file download response
 
 **Kind**: instance method of [<code>Response</code>](#Response)  
@@ -113,6 +113,7 @@ set a file download response
 | --- | --- | --- | --- |
 | path | <code>string</code> |  | file path |
 | [name] | <code>string</code> |  | file name, if undefined require('path').basename(path) will be used |
+| [type] | <code>string</code> |  | mime type |
 | [code] | <code>number</code> | <code>200</code> | http status code |
 
 <a name="Router"></a>
