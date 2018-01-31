@@ -6,6 +6,55 @@ A light javascript / typescript mvc framework that helps you to create object or
 
 [![Build Status](https://travis-ci.org/coolgk/node-mvc.svg?branch=master)](https://travis-ci.org/coolgk/node-mvc) [![Coverage Status](https://coveralls.io/repos/github/coolgk/node-mvc/badge.svg?branch=develop)](https://coveralls.io/github/coolgk/node-mvc?branch=develop) [![dependencies Status](https://david-dm.org/coolgk/node-mvc/status.svg)](https://david-dm.org/coolgk/node-mvc) [![Known Vulnerabilities](https://snyk.io/test/github/coolgk/node-mvc/badge.svg)](https://snyk.io/test/github/coolgk/node-mvc)
 
+## How this works
+
+This framework routes HTTP requests to class methods.
+
+e.g.
+**GET /shop/product/description/1** calls the **description** method in **/modules/api/controllers/product.js** (see example code below)
+
+In this example request, **shop** is a module (folder), **product** is a controller (file), **description** is an action (method) and **1** is an parameter i.e. the format of the request is **/module/[controller]/[action]/[param]** and the router will try to find the file from the folder structure below:
+
+    .
+    ./modules
+        /shop
+            /controllers
+                product.js
+            /models
+                model.js
+        /anothermodule
+            ...
+
+**product.js**
+
+```javascript
+class Product {
+    description ({ params, services }) {
+        // params contains values based on the pattern configured in getRoutes()
+        this._options.express.response.json(
+            services.model.find(params.id)
+        );
+    }
+
+    getRoutes () {
+        return {
+            GET: {
+                description: ':id' // allow GET request to access the description() method
+            }
+        }
+    }
+
+    // dependencies
+    getServices () {
+        return {
+            model: new (require('../models/model.js'))()
+        };
+    }
+}
+
+exports.default = Product;
+```
+
 
 Report bugs here: [https://github.com/coolgk/node-mvc/issues](https://github.com/coolgk/node-mvc/issues)
 
@@ -14,7 +63,7 @@ Report bugs here: [https://github.com/coolgk/node-mvc/issues](https://github.com
 ## Controller
 Base controller class
 
-**Kind**: global class
+**Kind**: global class  
 
 * [Controller](#Controller)
     * [new Controller([options])](#new_Controller_new)
@@ -33,24 +82,24 @@ Base controller class
 <a name="Controller+getRoutes"></a>
 
 ### controller.getRoutes() ⇒ <code>object</code>
-**Kind**: instance method of [<code>Controller</code>](#Controller)
-**Returns**: <code>object</code> - - allowable routes to access controller methods. Format: { [HTTP_METHOD]: { [CLASS_METHOD_NAME]: [PARAM_PATTERN], ... } }
+**Kind**: instance method of [<code>Controller</code>](#Controller)  
+**Returns**: <code>object</code> - - allowable routes to access controller methods. Format: { [HTTP_METHOD]: { [CLASS_METHOD_NAME]: [PARAM_PATTERN], ... } }  
 <a name="Controller+getPermissions"></a>
 
 ### controller.getPermissions() ⇒ <code>object</code>
-**Kind**: instance method of [<code>Controller</code>](#Controller)
-**Returns**: <code>object</code> - - a callback, which should return a boolean or Promise<boolean> value, for controlling the access of controller methods. Format: { [CLASS_METHOD_NAME]: [CALLBACK], ... }
+**Kind**: instance method of [<code>Controller</code>](#Controller)  
+**Returns**: <code>object</code> - - a callback, which should return a boolean or Promise<boolean> value, for controlling the access of controller methods. Format: { [CLASS_METHOD_NAME]: [CALLBACK], ... }  
 <a name="Controller+getServices"></a>
 
 ### controller.getServices() ⇒ <code>object</code>
-**Kind**: instance method of [<code>Controller</code>](#Controller)
-**Returns**: <code>object</code> - - class dependencies which are passed into class methods as one of the arguments
+**Kind**: instance method of [<code>Controller</code>](#Controller)  
+**Returns**: <code>object</code> - - class dependencies which are passed into class methods as one of the arguments  
 <a name="Response"></a>
 
 ## Response
 setting / getting standard responses in controllers
 
-**Kind**: global class
+**Kind**: global class  
 
 * [Response](#Response)
     * [.getResponse()](#Response+getResponse) ⇒ <code>object</code>
@@ -62,15 +111,15 @@ setting / getting standard responses in controllers
 <a name="Response+getResponse"></a>
 
 ### response.getResponse() ⇒ <code>object</code>
-**Kind**: instance method of [<code>Response</code>](#Response)
-**Returns**: <code>object</code> - - last set response. format: { code: number, json?: any, status?: string, file?: { path: string, name?: string } }
+**Kind**: instance method of [<code>Response</code>](#Response)  
+**Returns**: <code>object</code> - - last set response. format: { code: number, json?: any, status?: string, file?: { path: string, name?: string } }  
 <a name="Response+send"></a>
 
 ### response.send(data, [code]) ⇒ <code>object</code>
 set arbitrary response
 
-**Kind**: instance method of [<code>Response</code>](#Response)
-**Returns**: <code>object</code> - - set response. format: { code: number, ...data }
+**Kind**: instance method of [<code>Response</code>](#Response)  
+**Returns**: <code>object</code> - - set response. format: { code: number, ...data }  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -82,8 +131,8 @@ set arbitrary response
 ### response.json(json, [code]) ⇒ <code>object</code>
 set a json response
 
-**Kind**: instance method of [<code>Response</code>](#Response)
-**Returns**: <code>object</code> - - set response. format: { code: number, json }
+**Kind**: instance method of [<code>Response</code>](#Response)  
+**Returns**: <code>object</code> - - set response. format: { code: number, json }  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -95,8 +144,8 @@ set a json response
 ### response.text([text], code) ⇒ <code>object</code>
 set a http status response
 
-**Kind**: instance method of [<code>Response</code>](#Response)
-**Returns**: <code>object</code> - - set response. format: { code, status }
+**Kind**: instance method of [<code>Response</code>](#Response)  
+**Returns**: <code>object</code> - - set response. format: { code, status }  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -108,8 +157,8 @@ set a http status response
 ### response.file(path, [name], [type], [code]) ⇒ <code>object</code>
 set a file download response
 
-**Kind**: instance method of [<code>Response</code>](#Response)
-**Returns**: <code>object</code> - - set response. format: { file: { path, name }, code }
+**Kind**: instance method of [<code>Response</code>](#Response)  
+**Returns**: <code>object</code> - - set response. format: { file: { path, name }, code }  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -121,7 +170,7 @@ set a file download response
 <a name="Router"></a>
 
 ## Router
-**Kind**: global class
+**Kind**: global class  
 
 * [Router](#Router)
     * [new Router(options)](#new_Router_new)
@@ -144,5 +193,5 @@ set a file download response
 ### router.route() ⇒ <code>promise</code>
 this method routes urls like /moduleName/controllerName/action/param1/params2 to file modules/modulename/controllers/controllerName.js
 
-**Kind**: instance method of [<code>Router</code>](#Router)
-**Returns**: <code>promise</code> - - returns a controller method's return value if the return value is not falsy otherwise returns standard response object genereated from the response methods called inside the controller methods e.g. response.json({...}), response.file(path, name) ...see code examples in decoupled.ts/js or full.ts/js
+**Kind**: instance method of [<code>Router</code>](#Router)  
+**Returns**: <code>promise</code> - - returns a controller method's return value if the return value is not falsy otherwise returns standard response object genereated from the response methods called inside the controller methods e.g. response.json({...}), response.file(path, name) ...see code examples in decoupled.ts/js or full.ts/js  
