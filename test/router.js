@@ -2,7 +2,7 @@
 
 // const sinon = require('sinon');
 const chai = require('chai');
-chai.use(require("chai-as-promised"));
+chai.use(require('chai-as-promised'));
 const expect = chai.expect;
 
 // const config = require('../test.config.js');
@@ -10,6 +10,7 @@ const expect = chai.expect;
 describe('Router Module', function () {
 
     const { Router, RouterError } = require(`../dist/router`);
+    const { Response } = require(`../dist/response`);
     const mkdirp = require('mkdirp-promise');
     const fs = require('fs');
     const del = require('del');
@@ -118,11 +119,12 @@ describe('Router Module', function () {
     });
 
     it('should pass params, services, response to methods', () => {
-        const router = new Router({
+        const globals = {
             url: `/${module}/${controller}/with-params/12345/2017-01-29`,
             method: 'POST',
             rootDir: rootDir
-        });
+        };
+        const router = new Router(globals);
         return expect(router.route()).to.eventually.deep.equal({
             code: 200,
             json: {
@@ -130,7 +132,8 @@ describe('Router Module', function () {
                 params: {
                     id: '12345',
                     date: '2017-01-29'
-                }
+                },
+                globals
             }
         });
     });
@@ -172,6 +175,32 @@ describe('Router Module', function () {
         return expect(router.route()).to.eventually.deep.equal({ code: 404, text: RouterError.Not_Found_404 });
     });
 
+    it('should pass dependencies to methods, getPermissions and getServices', () => {
+        const globals = {
+            url: `/${module}/${controller}/dependencies-check/abc`,
+            method: 'GET',
+            rootDir
+        };
+
+        const router = new Router(globals);
+
+        const dependencies = {
+            params: {
+                var: 'abc'
+            },
+            globals,
+            response: new Response()
+        };
+
+        return expect(router.route()).to.eventually.deep.equal({
+            services: dependencies,
+            permissions: Object.assign(
+                dependencies,
+                { services: { a: 1 } }
+            )
+        });
+    });
+
     // it('camelCase url should hit method');
 
     function getCode (noGlobalPermission) {
@@ -186,7 +215,8 @@ class Simple extends Controller {
                 index: '',
                 ${action}: '',
                 noAccess: '',
-                'globalPermission': ''
+                globalPermission: '',
+                dependenciesCheck: ':var'
             },
             POST: {
                 withReturnValue: '',
@@ -195,18 +225,21 @@ class Simple extends Controller {
         };
     }
 
-    getPermissions () {
+    getPermissions (dependencies) {
+        this._permissionDependencies = dependencies;
         return {
             ${noGlobalPermission ? '' : "'*': () => false,"}
             ${action}: () => Promise.resolve(true),
             withReturnValue: () => true,
             noAccess: () => false,
             index: () => true,
-            withParams: () => Promise.resolve(true)
+            withParams: () => Promise.resolve(true),
+            dependenciesCheck: () => true
         };
     }
 
-    getServices () {
+    getServices (dependencies) {
+        this._serviceDependencies = dependencies;
         return {
             a: 1
         };
@@ -230,8 +263,15 @@ class Simple extends Controller {
         return '${action}';
     }
 
-    withParams ({services, params, response}) {
-        response.json({services, params});
+    withParams ({services, params, response, globals}) {
+        response.json({services, params, globals});
+    }
+
+    dependenciesCheck () {
+        return {
+            permissions: this._permissionDependencies,
+            services: this._serviceDependencies
+        };
     }
 }
 

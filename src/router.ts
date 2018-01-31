@@ -34,10 +34,10 @@ export class Router {
     /* tslint:disable */
     /**
      * @param {object} options
-     * @param {string} options.url - request.originalUrl from expressjs
+     * @param {string} options.url - request.url or request.originalUrl from expressjs
      * @param {string} options.method - http request method GET POST etc
      * @param {string} options.rootDir - rood dir of the app
-     * @param {function} [options.urlParser] - parser for getting url params e.g. for parsing patterns like /api/user/profile/:userId optional unless you need a more advanced parser
+     * @param {function} [options.urlParser] - a callback for parsing url params e.g. /api/user/profile/:userId. default parser: @coolgk/url
      */
     /* tslint:enable */
     public constructor (options: IRouterConfig) {
@@ -71,10 +71,13 @@ export class Router {
                         `${originalModule}/${originalController}/${originalAction}/${route[action]}`
                     ),
                     response,
-                    services: controllerObject.getServices()
+                    globals: this._options
                 };
-                const permission = controllerObject.getPermissions()[action] || controllerObject.getPermissions()['*'];
-                const accessGranted = typeof(permission) === 'function' ? await permission(dependencies) : true;
+                dependencies.services = controllerObject.getServices(dependencies);
+
+                const permissions = controllerObject.getPermissions(dependencies);
+                const permission = permissions[action] || permissions['*'];
+                const accessGranted = typeof(permission) === 'function' ? await permission() : true;
 
                 if (!accessGranted) {
                     return response.text(RouterError.Forbidden_403, 403);

@@ -33,7 +33,6 @@ describe('Controller Module', function () {
         expect(controller.getRoutes()).to.deep.equal({});
         expect(controller.getPermissions()).to.deep.equal({});
         expect(controller.getServices()).to.deep.equal({});
-        expect(controller).to.have.deep.property('_options', options);
     });
 
 });

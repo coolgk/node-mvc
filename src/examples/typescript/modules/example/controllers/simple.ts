@@ -42,10 +42,10 @@ export class Simple extends Controller {
      * GET /example/simple or /example/simple/index
      * index is the default method if not specified in the url
      */
-    public index () {
+    public index ({ globals }: IDependencies) {
         // this._options contains the object passed into the router's constructor
         // use the "response" property passed into the router's constructor
-        this._options.response.json(['index']);
+        globals.response.json(['index']);
     }
 
     /**
