@@ -37,11 +37,12 @@ class Product extends Controller {
     /**
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.params - url param values based on the patterns configured in getRoutes()
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      * @param {*} dependencies.services - services from returned from getServices()
      */
-    description ({ params, services }) {
-        // this._options contains global dependencies passed into the router class (see example below)
-        this._options.express.response.json(
+    description ({ params, services, globals }) {
+        // globals contains global dependencies passed into the router class (see example below)
+        globals.express.response.json(
             services.model.find(params.id)
         );
     }
@@ -191,6 +192,7 @@ set a file download response
 * [Router](#Router)
     * [new Router(options)](#new_Router_new)
     * [.route()](#Router+route) ⇒ <code>promise</code>
+    * [.getModuleControllerAction()](#Router+getModuleControllerAction) ⇒ <code>object</code>
 
 <a name="new_Router_new"></a>
 
@@ -211,3 +213,8 @@ this method routes urls like /moduleName/controllerName/action/param1/params2 to
 
 **Kind**: instance method of [<code>Router</code>](#Router)  
 **Returns**: <code>promise</code> - - returns a controller method's return value if the return value is not falsy otherwise returns standard response object genereated from the response methods called inside the controller methods e.g. response.json({...}), response.file(path, name) ...see code examples in decoupled.ts/js or full.ts/js  
+<a name="Router+getModuleControllerAction"></a>
+
+### router.getModuleControllerAction() ⇒ <code>object</code>
+**Kind**: instance method of [<code>Router</code>](#Router)  
+**Returns**: <code>object</code> - - {module, controller, action, originalModule, originalController, originalAction} originals are values before they are santised and transformed e.g. /module.../ConTroller/action-one -> {action: 'module', controller: 'controller', action: 'actionOne', originalModule: 'module...', controller: 'ConTroller', action: 'action-one' }  
