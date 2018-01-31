@@ -14,13 +14,13 @@ app.use(async (request, response, next) => {
         rootDir: __dirname, // required param
         url: request.originalUrl, // required param
         method: request.method, // required param
-        request, // you can pass anything into router, these variables will be available in controllers in this._options
-        response, // pass express response to controller so we can send http response with this._options.response.send() etc.
-        next // we don't use next() in this example, but if you pass it in, it will be available at this._options.next in your controller
+        request, // you can pass anything into router, these variables are injected into controllers methods
+        response, // pass express response to controller so we can send http response with globals.response.send() etc in methods
+        next // we don't use next() in this example, but if you pass it in, it will be available as globals.next in methods
     });
 
     // router.route() returns the return value of the controller method if the return value is not falsy
-    // otherwise it returns an object from formatted by the "response" object (see the README file for @coolgk/mvc/response)
+    // otherwise it returns an object formatted by the "response" object (see the README file for @coolgk/mvc/response)
     // e.g. { code: 200, text: 'SUCCESS' }, { code: 200, json: {...} }, { code: 200, file: { name: ..., path: ... } } etc.
     const result = (await router.route());
 
