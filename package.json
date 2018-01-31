@@ -74,7 +74,11 @@
     "debug:native": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.native.js",
     "debug:extended": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.extended.js",
     "debug:simple": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.simple.js",
-    "debug:decoupled": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.decoupled.js"
+    "debug:decoupled": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.decoupled.js",
+    "debug:js:native": "export $(cat .env | xargs) && nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/examples/javascript/index.native.js",
+    "debug:js:extended": "export $(cat .env | xargs) && nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/examples/javascript/index.express.extended.js",
+    "debug:js:simple": "export $(cat .env | xargs) && nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/examples/javascript/index.express.simple.js",
+    "debug:js:decoupled": "export $(cat .env | xargs) && nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/examples/javascript/index.express.decoupled.js"
   },
   "pre-commit": {
     "silent": false,

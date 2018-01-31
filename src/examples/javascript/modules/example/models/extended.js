@@ -1,23 +1,11 @@
-import { IConfig } from '../../../config';
-
-export interface INewUser {
-    name: string;
-    photo: string;
-}
-
-export interface IExistingUser extends INewUser {
-    _id: string;
-}
-
+'use strict';
 /**
  * a dummy model class
  * "Extended" is the name of the class
  */
-export class Extended {
+class Extended {
 
-    private _config: IConfig;
-
-    public constructor (config: IConfig) {
+    constructor (config) {
         this._config = config;
     }
 
@@ -25,24 +13,21 @@ export class Extended {
      * authenticate user
      * dummy method, always returns true
      */
-    public async authUser (): Promise<boolean> {
+    async authUser () {
         return true;
     }
 
     /**
      * dummpy method for saving user to db
      */
-    public async save (data: INewUser): Promise<IExistingUser> {
-        return {
-            _id: '5a0d6d152fff6d00c592aa9e',
-            ...data
-        };
+    async save (data) {
+        return Object.assign({ _id: '5a0d6d152fff6d00c592aa9e' }, data);
     }
 
     /**
      * dummy method for querying user data from db
      */
-    public async getUser (userId: string): Promise<IExistingUser> {
+    async getUser (userId) {
         return {
             _id: '5a0d6d152fff6d00c592aa9e',
             name: 'Daniel Gong',
@@ -52,4 +37,4 @@ export class Extended {
 
 }
 
-export default Extended;
+exports.default = Extended;

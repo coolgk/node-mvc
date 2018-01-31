@@ -1,7 +1,6 @@
 /**
  * an extended example of using the @coolgk/mvc framework with session and form data handlers
  */
-import * as express from 'express';
 import { createClient } from 'redis';
 
 import { Router } from '@coolgk/mvc/router';
