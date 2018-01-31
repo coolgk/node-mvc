@@ -81,34 +81,35 @@ Base controller class
 **Kind**: global class  
 
 * [Controller](#Controller)
-    * [new Controller([options])](#new_Controller_new)
     * [.getRoutes()](#Controller+getRoutes) ⇒ <code>object</code>
-    * [.getPermissions()](#Controller+getPermissions) ⇒ <code>object</code>
-    * [.getServices()](#Controller+getServices) ⇒ <code>object</code>
-
-<a name="new_Controller_new"></a>
-
-### new Controller([options])
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [options] | <code>\*</code> | any global dependencies to pass into controllers from the entry point |
+    * [.getPermissions(dependencies)](#Controller+getPermissions) ⇒ <code>object</code>
+    * [.getServices(dependencies)](#Controller+getServices) ⇒ <code>object</code>
 
 <a name="Controller+getRoutes"></a>
 
 ### controller.getRoutes() ⇒ <code>object</code>
 **Kind**: instance method of [<code>Controller</code>](#Controller)  
-**Returns**: <code>object</code> - - allowable routes to access controller methods. Format: { [HTTP_METHOD]: { [CLASS_METHOD_NAME]: [PARAM_PATTERN], ... } }  
+**Returns**: <code>object</code> - - routes that can access controller methods. Format: { [HTTP_METHOD]: { [CLASS_METHOD_NAME]: [PARAM_PATTERN], ... } }  
 <a name="Controller+getPermissions"></a>
 
-### controller.getPermissions() ⇒ <code>object</code>
+### controller.getPermissions(dependencies) ⇒ <code>object</code>
 **Kind**: instance method of [<code>Controller</code>](#Controller)  
-**Returns**: <code>object</code> - - a callback, which should return a boolean or Promise<boolean> value, for controlling the access of controller methods. Format: { [CLASS_METHOD_NAME]: [CALLBACK], ... }  
+**Returns**: <code>object</code> - - { [CLASS_METHOD_NAME]: [CALLBACK], ... } the callback should return a boolean or Promise<boolean>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| dependencies | <code>object</code> | global dependencies passed into the router's controller |
+
 <a name="Controller+getServices"></a>
 
-### controller.getServices() ⇒ <code>object</code>
+### controller.getServices(dependencies) ⇒ <code>object</code>
 **Kind**: instance method of [<code>Controller</code>](#Controller)  
-**Returns**: <code>object</code> - - class dependencies which are passed into class methods as one of the arguments  
+**Returns**: <code>object</code> - - class dependencies, which is injected into the class methods by the router  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| dependencies | <code>object</code> | global dependencies passed into the router's controller |
+
 <a name="Response"></a>
 
 ## Response
@@ -198,10 +199,10 @@ set a file download response
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>object</code> |  |
-| options.url | <code>string</code> | request.originalUrl from expressjs |
+| options.url | <code>string</code> | request.url or request.originalUrl from expressjs |
 | options.method | <code>string</code> | http request method GET POST etc |
 | options.rootDir | <code>string</code> | rood dir of the app |
-| [options.urlParser] | <code>function</code> | parser for getting url params e.g. for parsing patterns like /api/user/profile/:userId optional unless you need a more advanced parser |
+| [options.urlParser] | <code>function</code> | a callback for parsing url params e.g. /api/user/profile/:userId. default parser: @coolgk/url |
 
 <a name="Router+route"></a>
 
