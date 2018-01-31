@@ -1,5 +1,5 @@
 ﻿import { access, constants } from 'fs';
-import { Response, IResponse } from './response';
+import { Response } from './response';
 import { getParams, IParams } from '@coolgk/url';
 import { IDependencies } from './controller';
 
@@ -50,7 +50,7 @@ export class Router {
      * @return {promise} - returns a controller method's return value if the return value is not falsy otherwise returns standard response object genereated from the response methods called inside the controller methods e.g. response.json({...}), response.file(path, name) ...see code examples in decoupled.ts/js or full.ts/js
      */
     /* tslint:enable */
-    public async route (): Promise<IResponse> {
+    public async route (): Promise<any> {
         const { module, controller, action, originalModule, originalController, originalAction } = this.getModuleControllerAction();
 
         const response = new Response();
@@ -90,6 +90,12 @@ export class Router {
         return response.text(RouterError.Not_Found_404, 404);
     }
 
+    /* tslint:disable */
+    /**
+     * @returns {object} - {module, controller, action, originalModule, originalController, originalAction} originals are values before they are santised and transformed e.g. /module.../ConTroller/action-one -> {action: 'module', controller: 'controller', action: 'actionOne', originalModule: 'module...', controller: 'ConTroller', action: 'action-one' }
+     * @memberof Router
+     */
+    /* tslint:enable */
     public getModuleControllerAction (): IModuleControllerAction {
         // this._option.url is "request.url" from node or "request.originalUrl" from express
         const [, originalModule, originalController, originalAction] = (this._options.url.split('?').shift() || '').split('/');
