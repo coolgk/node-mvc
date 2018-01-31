@@ -14,7 +14,7 @@ import { config } from './config';
 
 import { createServer } from 'http';
 import { lookup } from 'mime-types';
-import { createReadStream } from 'fs';
+import { createReadStream, stat } from 'fs';
 import { basename } from 'path';
 
 createServer(async (request, response) => {
@@ -63,16 +63,21 @@ createServer(async (request, response) => {
                     break;
                 case 'file':
                     const file = result[type] || { name: '', path: '', type: '' };
-                    if (!file.name || String(file.name).trim() === '') {
-                        file.name = basename(file.path);
-                    }
 
-                    response.writeHead(200, {
-                        'Content-Type': file.type || lookup(file.name) || 'application/octet-stream',
-                        'Content-Length': stat.size
-                    });
+                    // stat(file.path, (error, stats) => {
 
-                    createReadStream(file.path).pipe(response);
+                    // });
+
+                    // if (!file.name || String(file.name).trim() === '') {
+                    //     file.name = basename(file.path);
+                    // }
+
+                    // response.writeHead(200, {
+                    //     'Content-Type': file.type || lookup(file.name) || 'application/octet-stream',
+                    //     'Content-Length': stat.size
+                    // });
+
+                    // createReadStream(file.path).pipe(response);
                     break;
                 case 'text':
                     response.writeHead(result.code || 200, { 'Content-Type': 'text/html; charset=utf8' });
