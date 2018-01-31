@@ -1,5 +1,3 @@
-import { basename } from 'path';
-
 export interface IResponse {
     code: number;
     json?: any;
@@ -7,6 +5,7 @@ export interface IResponse {
     file?: {
         path: string;
         name?: string;
+        type?: string;
     };
     [index: string]: any;
 }
@@ -67,16 +66,14 @@ export class Response {
      * set a file download response
      * @param {string} path - file path
      * @param {string} [name] - file name, if undefined require('path').basename(path) will be used
+     * @param {string} [type] - mime type
      * @param {number} [code=200] - http status code
      * @returns {object} - set response. format: { file: { path, name }, code }
      * @memberof Response
      */
-    public file (path: string, name: string, code: number = 200): IResponse {
+    public file (path: string, name?: string, type?: string, code: number = 200): IResponse {
         if (path) {
-            if (!name || String(name).trim() === '') {
-                name = basename(path);
-            }
-            return this._response = { file: { path, name }, code };
+            return this._response = { file: { path, name, type }, code };
         }
         return this.text(ResponseError.File_Not_Found, 404);
     }
