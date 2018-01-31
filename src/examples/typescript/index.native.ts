@@ -52,6 +52,7 @@ createServer(async (request, response) => {
     // this example uses the injected response object for setting up http responese in a standard format
     const result = (await router.route());
 
+    // handle json, file or text responses
     for (const type of ['json', 'file', 'text']) {
         if (result[type]) {
             switch (type) {
@@ -61,51 +62,39 @@ createServer(async (request, response) => {
                         JSON.stringify(result[type])
                     );
                     break;
-                case 'file':
-                    const file = result[type] || { name: '', path: '', type: '' };
-
-                    // stat(file.path, (error, stats) => {
-
-                    // });
-
-                    // if (!file.name || String(file.name).trim() === '') {
-                    //     file.name = basename(file.path);
-                    // }
-
-                    // response.writeHead(200, {
-                    //     'Content-Type': file.type || lookup(file.name) || 'application/octet-stream',
-                    //     'Content-Length': stat.size
-                    // });
-
-                    // createReadStream(file.path).pipe(response);
-                    break;
                 case 'text':
                     response.writeHead(result.code || 200, { 'Content-Type': 'text/html; charset=utf8' });
                     response.end(result.text);
                     break;
+                case 'file':
+                    const file = result[type] || { name: '', path: '', type: '' };
+                    stat(file.path, (error, stats) => {
+                        if (error) {
+                            response.writeHead(404, {'Content-Type': 'text/html; charset=utf8'});
+                            response.end('File Not Found');
+                        } else {
+                            if (!file.name || String(file.name).trim() === '') {
+                                file.name = basename(file.path);
+                            }
+                            response.writeHead(200, {
+                                'Content-Type': file.type || lookup(file.name) || 'application/octet-stream',
+                                'Content-Length': stats.size
+                            });
+                            createReadStream(file.path).pipe(response);
+                        }
+                    });
+                    break;
             }
+            return;
         }
     }
 
-    // handle json, file or text responses
-    const responseSent = result.json && (response.json(result.json) || 1)
-    || result.file && (response.download(result.file.path, result.file.name || '') || 1)
-    || result.code && (response.status(result.code).send(result.text) || 1);
-
     // json, file and text are the only valid responses from this simple app
     // log error for anything else
-    if (!responseSent) {
-        // your custom error logger
-        console.error(result); // tslint:disable-line
-        response.status(500).send('Internal Server Error');
-    }
-
-    // show session data
-    response.end(
-        JSON.stringify(
-            await session.getAll()
-        )
-    ); // {"user":{"id":1,"username":"user@example.com"}}
+    // your custom error logger
+    console.error(result); // tslint:disable-line
+    response.writeHead(500, { 'Content-Type': 'text/html; charset=utf8' });
+    response.end('Internal Server Error');
 
 }).listen(3000);
 

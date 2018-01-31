@@ -71,6 +71,7 @@
     "tsc:watch": "tsc --project tsconfig.debug.json -w --pretty",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "package": "gulp package",
+    "debug:native": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.native.js",
     "debug:extended": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.extended.js",
     "debug:simple": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.simple.js",
     "debug:decoupled": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.decoupled.js"

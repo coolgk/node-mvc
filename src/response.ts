@@ -72,7 +72,7 @@ export class Response {
      * @memberof Response
      */
     public file (path: string, name?: string, type?: string, code: number = 200): IResponse {
-        if (path) {
+        if (path && String(path).trim()) {
             return this._response = { file: { path, name, type }, code };
         }
         return this.text(ResponseError.File_Not_Found, 404);
