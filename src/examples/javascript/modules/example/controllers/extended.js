@@ -1,19 +1,19 @@
+'use strict';
 /**
  * an example controller using the @coolgk/mvc framework
  */
-import { IRoutes, IPermissions, Controller, IDependencies } from '@coolgk/mvc/controller';
-import { INewUser, IExistingUser } from '../models/extended';
-import { access, constants } from 'fs';
+const { Controller } = require('@coolgk/mvc/controller');
+const { access, constants } = require('fs');
 
 /**
  * controller classes should extend the Controller class from @coolgk/mvc/controller
  * you can also create your own base controller that extends @coolgk/mvc/controller
  */
-export class Extended extends Controller {
+class Extended extends Controller {
     /**
      * setup valid routes to methods
      */
-    public getRoutes (): IRoutes {
+    getRoutes () {
         return {
             GET: {
                 user: ':id', // allow GET request to call the user() method
@@ -32,7 +32,7 @@ export class Extended extends Controller {
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public getPermissions ({ globals }: IDependencies): IPermissions {
+    getPermissions ({ globals }) {
         return {
             // * the is default permission for all methods in this class
             // deny if not logged in, otherwise renew session and allow access
@@ -50,7 +50,7 @@ export class Extended extends Controller {
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public getServices ({ globals }: IDependencies): any {
+    getServices ({ globals }) {
         return {
             model: new (require('../models/extended').default)(globals.config)
         };
@@ -64,7 +64,7 @@ export class Extended extends Controller {
      * @param {*} dependencies.services - services from returned from getServices() injected by the router
      * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public async login ({ response, services, globals }: IDependencies) {
+    async login ({ response, services, globals }) {
         // get form data
         // see @coolgk/formdata https://www.npmjs.com/package/@coolgk/formdata
         const post = await globals.formdata.getData();
@@ -94,7 +94,7 @@ export class Extended extends Controller {
      * @param {object} dependencies.response - reponse object injected by the router
      * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public async logout ({response, globals}: IDependencies) {
+    async logout ({ response, globals }) {
         // kill the current session and set response
         response.json(await globals.session.destroy());
     }
@@ -107,7 +107,7 @@ export class Extended extends Controller {
      * @param {*} dependencies.services - services from returned from getServices() injected by the router
      * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public async register ({response, services, globals}: IDependencies) {
+    async register ({ response, services, globals }) {
         // get posted data and uploaded file
         // see @coolgk/formdata https://www.npmjs.com/package/@coolgk/formdata
         const post = await globals.formdata.getData('photo');
@@ -131,7 +131,7 @@ export class Extended extends Controller {
      * @param {*} dependencies.services - services from returned from getServices() injected by the router
      * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public async user ({params, response, services, globals}: IDependencies) {
+    async user ({ params, response, services, globals }) {
         // user() method has :id configured as a param in getRoutes()
         if (!params.id) {
             response.json({error: 'missing user id'});
@@ -153,7 +153,7 @@ export class Extended extends Controller {
      * @param {object} dependencies.response - reponse object injected by the router
      * @param {*} dependencies.services - services from returned from getServices() injected by the router
      */
-    public async downloadPhoto ({params, response, services}: IDependencies) {
+    async downloadPhoto ({ params, response, services }) {
         // find the file path from model
         const user = await services.model.getUser(params.userId);
 
@@ -171,4 +171,4 @@ export class Extended extends Controller {
 
 }
 
-export default Extended;
+exports.default = Extended;

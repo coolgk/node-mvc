@@ -1,4 +1,4 @@
-'use strcit';
+'use strict';
 
 const gulp = require('gulp');
 const ts = require('gulp-typescript');
@@ -78,8 +78,8 @@ function compileTs (dev) {
 
     if (dev) {
         tsResult.js = tsResult.js
-        .pipe(sourcemaps.write())
-        .pipe(header('require("source-map-support").install();' + "\n"));
+            .pipe(sourcemaps.write())
+            .pipe(header('require("source-map-support").install();' + "\n")); // eslint-disable-line
     } else {
         tsResult.js = tsResult.js.pipe(header(codeHeader));
         promises.push(
@@ -113,7 +113,7 @@ async function generateJsDocMd () {
                 if (!['index', 'test', 'globals.d', 'examples'].includes(name)) {
                     jsDocs += await jsdoc2md.render({ files: `${distFolder}/${name}.js` });
                 }
-            };
+            }
 
             resolve(jsDocs);
         });
@@ -124,14 +124,15 @@ function createReadme (jsDoc) {
     return new Promise((resolve, reject) => {
         fs.readFile('./README.BASE.md', 'utf8', (error, data) => {
             if (error) reject(error);
-            fs.writeFile(`./README.md`, `${data}\n\n${jsDoc}`, 'utf8', (error) => {
+            const bugLine = `Report bugs here: [${packageJson.bugs.url}](${packageJson.bugs.url})`;
+            fs.writeFile(`./README.md`, `${data}\n\n${bugLine}\n\n${jsDoc}`, 'utf8', (error) => {
                 if (error) return reject(error);
                 fs.createReadStream(`./README.md`).pipe(
                     fs.createWriteStream(`${packageFolder}/README.md`)
                 ).on('finish', () => resolve()).on('error', reject);
             });
         });
-    })
+    });
 }
 
 function generateIndexFile () {
@@ -148,7 +149,7 @@ function generateIndexFile () {
             writeStream.end();
             resolve();
         });
-    })
+    });
 }
 
 function copyFilesToPackage () {
@@ -175,9 +176,9 @@ function createPackageJson () {
                 Object.assign(
                     packageJson,
                     {
-                        name: '@coolgk/mvc',
-                        devDependencies: undefined,
-                        scripts: undefined,
+                        'name': '@coolgk/mvc',
+                        'devDependencies': undefined,
+                        'scripts': undefined,
                         'pre-commit': undefined
                     }
                 )
@@ -191,20 +192,20 @@ function createPackageJson () {
     });
 }
 
-function consoleLogError(message) {
+function consoleLogError (message) {
     console.error(chalk.white.bgRed.bold(message));
 }
 
-function execCommand (command, options = {mute: false}) {
+function execCommand (command, options = { mute: false }) {
     return new Promise((resolve, reject) => {
-        if (!options.mute) console.log('exec command: ' + command);
-        childProcess.exec(command, {maxBuffer: Infinity}, (error, stdout, stderr) => {
-            if (!options.mute) console.log(stdout);
+        if (!options.mute) console.log('exec command: ' + command); // eslint-disable-line
+        childProcess.exec(command, { maxBuffer: Infinity }, (error, stdout, stderr) => {
+            if (!options.mute) console.log(stdout); // eslint-disable-line
             consoleLogError(stderr);
             if (error) {
                 reject(error);
             } else {
-                if (!options.mute) console.log('done');
+                if (!options.mute) console.log('done'); // eslint-disable-line
                 resolve();
             }
         });

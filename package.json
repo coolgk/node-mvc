@@ -1,7 +1,6 @@
 {
-
   "name": "@coolgk/node-mvc",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "author": "Daniel Gong <daniel.k.gong@gmail.com>",
   "homepage": "https://github.com/coolgk/node-mvc.git",
   "bugs": {
@@ -25,11 +24,12 @@
     "@coolgk/amqp": "^2.0.3",
     "@coolgk/formdata": "^2.0.3",
     "@coolgk/jwt": "^2.0.5",
-    "@coolgk/mvc": "^1.0.1",
-    "@coolgk/session": "^1.0.1",
+    "@coolgk/mvc": "^1.0.5",
+    "@coolgk/session": "^1.0.3",
     "@coolgk/token": "^2.0.3",
     "@types/cookie": "^0.3.1",
     "@types/express": "^4.11.0",
+    "@types/mime-types": "^2.1.0",
     "@types/redis": "^2.8.5",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
@@ -45,6 +45,7 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^3.2.4",
     "jsdoc-to-markdown": "^3.0.4",
+    "mime-types": "^2.1.17",
     "mkdirp-promise": "^5.0.1",
     "mocha": "^4.1.0",
     "nsp": "^3.1.0",
@@ -56,7 +57,7 @@
     "snyk": "^1.69.5",
     "source-map-support": "^0.5.3",
     "tslint": "^5.9.1",
-    "typescript": "^2.6.2"
+    "typescript": "^2.7.1"
   },
   "scripts": {
     "pretest": "tsc --project tsconfig.dev.json",
@@ -70,9 +71,14 @@
     "tsc:watch": "tsc --project tsconfig.debug.json -w --pretty",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "package": "gulp package",
+    "debug:native": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.native.js",
     "debug:extended": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.extended.js",
     "debug:simple": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.simple.js",
-    "debug:decoupled": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.decoupled.js"
+    "debug:decoupled": "export $(cat .env | xargs) && nodemon --watch ./dist --inspect=0.0.0.0:9229 --nolazy ./dist/examples/typescript/index.express.decoupled.js",
+    "debug:js:native": "export $(cat .env | xargs) && nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/examples/javascript/index.native.js",
+    "debug:js:extended": "export $(cat .env | xargs) && nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/examples/javascript/index.express.extended.js",
+    "debug:js:simple": "export $(cat .env | xargs) && nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/examples/javascript/index.express.simple.js",
+    "debug:js:decoupled": "export $(cat .env | xargs) && nodemon --watch ./src --inspect=0.0.0.0:9229 --nolazy ./src/examples/javascript/index.express.decoupled.js"
   },
   "pre-commit": {
     "silent": false,

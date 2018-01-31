@@ -1,8 +1,9 @@
+'use strict';
 /**
  * an example controller using the @coolgk/mvc framework which decouples express from the main controller code
  */
-import * as express from 'express';
-import { Router } from '@coolgk/mvc/router';
+const express = require('express');
+const { Router } = require('@coolgk/mvc/router');
 
 const app = express();
 

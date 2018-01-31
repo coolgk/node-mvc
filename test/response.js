@@ -13,11 +13,10 @@ describe('Response Module', function () {
 
     let response;
 
-    before(() => {
+    // before(() => {});
+    beforeEach(() => {
         response = new Response();
     });
-
-    // beforeEach(() => {});
     // afterEach(() => {});
     // after(() => {});
 
@@ -43,18 +42,25 @@ describe('Response Module', function () {
 
         let file = {
             path: Math.random(),
-            name: Math.random()
+            name: Math.random(),
+            type: undefined
         };
         response.file(file.path, file.name);
         expect(response.getResponse()).to.deep.equal({ file, code: 200 });
 
         file.name = `${Math.random()}.txt`;
         file.path = `abc/${Math.random()}/${file.name}`;
-        response.file(file.path, undefined, 201);
-        expect(response.getResponse()).to.deep.equal({ file, code: 201 });
+        response.file(file.path, undefined, undefined, 201);
+        expect(response.getResponse()).to.deep.equal({ file: { ...file, name: undefined }, code: 201 });
 
         response.file(undefined, file.name);
         expect(response.getResponse()).to.deep.equal({ text: ResponseError.File_Not_Found, code: 404 });
+
+        response.file(file.path, undefined, 'text/html', 201);
+        expect(response.getResponse()).to.deep.equal({ file: { ...file, type: 'text/html', name: undefined }, code: 201 });
     });
 
+    it('response should return an object when no response is set', () => {
+        expect(response.getResponse()).to.deep.equal({});
+    })
 });

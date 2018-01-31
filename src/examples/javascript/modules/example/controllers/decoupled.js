@@ -1,17 +1,18 @@
+'use strict';
 /**
  * an example controller using the @coolgk/mvc framework which decouples express from the main controller code
  */
-import { IRoutes, IPermissions, Controller, IDependencies } from '@coolgk/mvc/controller';
+const { Controller } = require('@coolgk/mvc/controller');
 
 /**
  * controller classes should extend the Controller class from @coolgk/mvc/controller
  * you can also create your own base controller that extends @coolgk/mvc/controller
  */
-export class Decoupled extends Controller {
+class Decoupled extends Controller {
     /**
      * setup valid routes to methods
      */
-    public getRoutes (): IRoutes {
+    getRoutes () {
         return {
             GET: {
                 index: '', // allow GET request to call the index() method
@@ -27,13 +28,13 @@ export class Decoupled extends Controller {
     /**
      * setup permission callbacks for accessing methods
      */
-    public getPermissions (): IPermissions {
+    getPermissions () {
         return {
             // * is the default permission for all methods in this class
             // allow requests to access all methods
             '*': () => true,
             'user': () => Promise.resolve(true), // the callback can also return a promise<boolean>
-            'noAccess': () => false, // deny all access
+            'noAccess': () => false // deny all access
         };
     }
 
@@ -43,7 +44,7 @@ export class Decoupled extends Controller {
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.response - reponse object injected by the router
      */
-    public index ({response}: IDependencies) {
+    index ({ response }) {
         // send a json response
         // response need to be handled manually out after calling Router.route()
         response.json(['index']);
@@ -55,7 +56,7 @@ export class Decoupled extends Controller {
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.response - reponse object injected by the router
      */
-    public customData ({response}: IDependencies) {
+    customData ({ response }) {
         // send a response with arbitrary data
         // response need to be handled manually out after calling Router.route()
         response.send({
@@ -75,7 +76,7 @@ export class Decoupled extends Controller {
      * @param {object} dependencies.params - url param values configured in getRoutes()
      * @param {object} dependencies.response - reponse object injected by the router
      */
-    public user ({params, response}: IDependencies) {
+    user ({ params, response }) {
         // send a json response
         // with the request /example/extended/user/1234/preference
         // the params variable contains value { id: '1234', section: 'preference' }
@@ -88,7 +89,7 @@ export class Decoupled extends Controller {
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.response - reponse object injected by the router
      */
-    public save ({response}: IDependencies) {
+    save ({ response }) {
         // send a json response
         response.json(['save']);
     }
@@ -96,7 +97,7 @@ export class Decoupled extends Controller {
     /**
      * HTTP Request: /example/simple/no-access
      */
-    public noAccess () {
+    noAccess () {
         // the callback in getPermissions() for the noAccess() method returns false
         // router will return a 403 Forbidden response
     }
@@ -104,10 +105,10 @@ export class Decoupled extends Controller {
     /**
      * HTTP Request: /example/simple/internal
      */
-    private internal () {
+    internal () {
         // internal is not defined in getRoutes() i.e. this method no accessible through a request
         // router will return a 404 Not Found response
     }
 }
 
-export default Decoupled;
+exports.default = Decoupled;

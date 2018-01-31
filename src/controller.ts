@@ -14,7 +14,8 @@ export interface IPermissions {
 export interface IDependencies {
     params: IParams;
     response: Response;
-    services: any;
+    globals: any;
+    services?: any;
 }
 
 /**
@@ -22,19 +23,9 @@ export interface IDependencies {
  */
 export class Controller {
 
-    protected _options: any;
-
-    /**
-     * @param {*} [options] - any global dependencies to pass into controllers from the entry point
-     * @memberof Controller
-     */
-    constructor (options?: any) {
-        this._options = options;
-    }
-
     /* tslint:disable */
     /**
-     * @returns {object} - allowable routes to access controller methods. Format: { [HTTP_METHOD]: { [CLASS_METHOD_NAME]: [PARAM_PATTERN], ... } }
+     * @returns {object} - routes that can access controller methods. Format: { [HTTP_METHOD]: { [CLASS_METHOD_NAME]: [PARAM_PATTERN], ... } }
      * @memberof Controller
      */
     /* tslint:enable */
@@ -44,7 +35,8 @@ export class Controller {
 
     /* tslint:disable */
     /**
-     * @returns {object} - a callback, which should return a boolean or Promise<boolean> value, for controlling the access of controller methods. Format: { [CLASS_METHOD_NAME]: [CALLBACK], ... }
+     * @param {object} dependencies - global dependencies passed into the router's controller
+     * @returns {object} - { [CLASS_METHOD_NAME]: [CALLBACK], ... } the callback should return a boolean or Promise<boolean>
      * @memberof Controller
      */
     /* tslint:enable */
@@ -52,13 +44,12 @@ export class Controller {
         return {};
     }
 
-    /* tslint:disable */
     /**
-     * @returns {object} - class dependencies which are passed into class methods as one of the arguments
+     * @param {object} dependencies - global dependencies passed into the router's controller
+     * @returns {object} - class dependencies, which is injected into the class methods by the router
      * @memberof Controller
      */
-    /* tslint:enable */
-    public getServices (): any {
+    public getServices (dependencies?: IDependencies): any {
         return {};
     }
 

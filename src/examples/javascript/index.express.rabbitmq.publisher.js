@@ -1,13 +1,14 @@
+'use strict';
 /**
  * an example of using the @coolgk/mvc framework with rabbitMQ
  * message publisher
  */
-import * as express from 'express';
-import { Amqp, IResponseMessage } from '@coolgk/amqp';
+const express = require('express');
+const { Amqp } = require('@coolgk/amqp');
 
-import { Router } from '@coolgk/mvc/router';
+const { Router } = require('@coolgk/mvc/router');
 // import app configurations
-import { config } from './config';
+const { config } = require('./config');
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(async (request, response, next) => {
     // create an amqp (rabbitmq) instance
     // see @coolgk/amqp https://www.npmjs.com/package/@coolgk/amqp
     const amqp = new Amqp({
-        url: config.amqp.url || ''
+        url: config.amqp.url
     });
 
     const routerConfig = {
@@ -30,8 +31,8 @@ app.use(async (request, response, next) => {
     const { module, controller, action } = router.getModuleControllerAction();
 
     // setup callback for handling responses from consumers
-    const responseHandler = (consumerResponse: IResponseMessage) => {
-        console.log('consumer replied: ', consumerResponse.responseMessage); // tslint:disable-line
+    const responseHandler = (consumerResponse) => {
+        console.log('consumer replied: ', consumerResponse.responseMessage); // eslint-disable-line
         const result = consumerResponse.responseMessage;
 
         // handle json, file or text responses
@@ -43,7 +44,7 @@ app.use(async (request, response, next) => {
         // log error for anything else
         if (!responseSent) {
             // your custom error logger
-            console.error(result); // tslint:disable-line
+            console.error(result); // eslint-disable-line
             response.status(500).send('Internal Server Error');
         }
     };
@@ -64,5 +65,5 @@ app.listen(3000);
 
 process.on('unhandledRejection', (error) => {
     // your custom error logger
-    console.error(error); // tslint:disable-line
+    console.error(error); // eslint-disable-line
 });

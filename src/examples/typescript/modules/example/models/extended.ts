@@ -9,6 +9,10 @@ export interface IExistingUser extends INewUser {
     _id: string;
 }
 
+/**
+ * a dummy model class
+ * "Extended" is the name of the class
+ */
 export class Extended {
 
     private _config: IConfig;
@@ -17,10 +21,17 @@ export class Extended {
         this._config = config;
     }
 
-    public async authUser () {
+    /**
+     * authenticate user
+     * dummy method, always returns true
+     */
+    public async authUser (): Promise<boolean> {
         return true;
     }
 
+    /**
+     * dummpy method for saving user to db
+     */
     public async save (data: INewUser): Promise<IExistingUser> {
         return {
             _id: '5a0d6d152fff6d00c592aa9e',
@@ -28,6 +39,9 @@ export class Extended {
         };
     }
 
+    /**
+     * dummy method for querying user data from db
+     */
     public async getUser (userId: string): Promise<IExistingUser> {
         return {
             _id: '5a0d6d152fff6d00c592aa9e',
