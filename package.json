@@ -24,7 +24,7 @@
     "@coolgk/amqp": "^2.0.3",
     "@coolgk/formdata": "^2.0.3",
     "@coolgk/jwt": "^2.0.5",
-    "@coolgk/mvc": "^1.0.2",
+    "@coolgk/mvc": "^1.0.4",
     "@coolgk/session": "^1.0.3",
     "@coolgk/token": "^2.0.3",
     "@types/cookie": "^0.3.1",
@@ -57,7 +57,7 @@
     "snyk": "^1.69.5",
     "source-map-support": "^0.5.3",
     "tslint": "^5.9.1",
-    "typescript": "^2.6.2"
+    "typescript": "^2.7.1"
   },
   "scripts": {
     "pretest": "tsc --project tsconfig.dev.json",

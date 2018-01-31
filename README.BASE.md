@@ -37,11 +37,12 @@ class Product extends Controller {
     /**
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.params - url param values based on the patterns configured in getRoutes()
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      * @param {*} dependencies.services - services from returned from getServices()
      */
-    description ({ params, services }) {
-        // this._options contains global dependencies passed into the router class (see example below)
-        this._options.express.response.json(
+    description ({ params, services, globals }) {
+        // globals contains global dependencies passed into the router class (see example below)
+        globals.express.response.json(
             services.model.find(params.id)
         );
     }

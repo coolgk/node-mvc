@@ -29,13 +29,15 @@ export class Extended extends Controller {
 
     /**
      * setup permission callbacks for accessing methods
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public getPermissions (): IPermissions {
+    public getPermissions ({ globals }: IDependencies): IPermissions {
         return {
             // * the is default permission for all methods in this class
             // deny if not logged in, otherwise renew session and allow access
             // see @coolgk/session https://www.npmjs.com/package/@coolgk/session
-            '*': () => this._options.session.verifyAndRenew(),
+            '*': () => globals.session.verifyAndRenew(),
             // skip session check for the register() method
             'register': () => true,
             // the callback can also return a promise<boolean>
@@ -44,11 +46,13 @@ export class Extended extends Controller {
     }
 
     /**
-     * setup all dependencies
+     * setup local dependencies
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public getServices (): any {
+    public getServices ({ globals }: IDependencies): any {
         return {
-            model: new (require('../models/extended').default)(this._options.config)
+            model: new (require('../models/extended').default)(globals.config)
         };
     }
 
@@ -58,11 +62,12 @@ export class Extended extends Controller {
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.response - reponse object injected by the router
      * @param {*} dependencies.services - services from returned from getServices() injected by the router
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public async login ({response, services}: IDependencies) {
+    public async login ({ response, services, globals }: IDependencies) {
         // get form data
         // see @coolgk/formdata https://www.npmjs.com/package/@coolgk/formdata
-        const post = await this._options.formdata.getData();
+        const post = await globals.formdata.getData();
 
         if (!post.username || !post.password) {
             response.json({error: 'username and password are required'});
@@ -74,9 +79,9 @@ export class Extended extends Controller {
 
         if (loggedIn) {
             // start a session
-            const accessToken = await this._options.session.init();
+            const accessToken = await globals.session.init();
             // set session data
-            await this._options.session.set('user', {username: post.username, password: post.password});
+            await globals.session.set('user', {username: post.username, password: post.password});
             // set response
             response.json({ accessToken });
         }
@@ -87,10 +92,11 @@ export class Extended extends Controller {
      * GET /example/extended/logout
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.response - reponse object injected by the router
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public async logout ({response}: IDependencies) {
+    public async logout ({response, globals}: IDependencies) {
         // kill the current session and set response
-        response.json(await this._options.session.destroy());
+        response.json(await globals.session.destroy());
     }
 
     /**
@@ -99,11 +105,12 @@ export class Extended extends Controller {
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.response - reponse object injected by the router
      * @param {*} dependencies.services - services from returned from getServices() injected by the router
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public async register ({response, services}: IDependencies) {
+    public async register ({response, services, globals}: IDependencies) {
         // get posted data and uploaded file
         // see @coolgk/formdata https://www.npmjs.com/package/@coolgk/formdata
-        const post = await this._options.formdata.getData('photo');
+        const post = await globals.formdata.getData('photo');
 
         // call model's method
         const savedUser = await services.model.save({
@@ -122,8 +129,9 @@ export class Extended extends Controller {
      * @param {object} dependencies.params - url param values configured in getRoutes()
      * @param {object} dependencies.response - reponse object injected by the router
      * @param {*} dependencies.services - services from returned from getServices() injected by the router
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    public async user ({params, response, services}: IDependencies) {
+    public async user ({params, response, services, globals}: IDependencies) {
         // user() method has :id configured as a param in getRoutes()
         if (!params.id) {
             response.json({error: 'missing user id'});
@@ -134,7 +142,7 @@ export class Extended extends Controller {
         const user = await services.model.getUser(params.id);
 
         // send user data and all data in session to response
-        response.json({ user, session: await this._options.session.getAll() });
+        response.json({ user, session: await globals.session.getAll() });
     }
 
     /**

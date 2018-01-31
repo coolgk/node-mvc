@@ -85,7 +85,7 @@ describe('Router Module', function () {
         });
 
         return Promise.all([
-            expect(router2.route()).to.eventually.equal(undefined),
+            expect(router2.route()).to.eventually.deep.equal({}),
             expect(router3.route()).to.eventually.deep.equal({ code: 404, text: RouterError.Not_Found_404 }),
         ]);
     });
@@ -114,7 +114,7 @@ describe('Router Module', function () {
         return Promise.all([
             expect(router.route()).to.eventually.deep.equal({ code: 403, text: RouterError.Forbidden_403 }),
             expect(router2.route()).to.eventually.deep.equal({ code: 403, text: RouterError.Forbidden_403 }),
-            expect(router3.route()).to.eventually.equal(undefined)
+            expect(router3.route()).to.eventually.deep.equal({})
         ]);
     });
 

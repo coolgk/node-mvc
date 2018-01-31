@@ -42,11 +42,13 @@ class Simple extends Controller {
      * HTTP Request:
      * GET /example/simple or /example/simple/index
      * index is the default method if not specified in the url
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    index () {
-        // this._options contains the object passed into the router's constructor
+    index ({ globals }) {
+        // globals contains the object passed into the router's constructor
         // use the "response" property passed into the router's constructor
-        this._options.response.json(['index']);
+        globals.response.json(['index']);
     }
 
     /**
@@ -54,21 +56,24 @@ class Simple extends Controller {
      * GET /example/simple/user/123/preference
      * @param {object} dependencies - this param is destructured in this example
      * @param {object} dependencies.params - url param values configured in getRoutes()
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    user ({ params }) {
-        // this._options contains the object passed into the router's constructor
-        this._options.response.json(params);
+    user ({ params, globals }) {
+        // globals contains the object passed into the router's constructor
+        globals.response.json(params);
     }
 
     /**
      * HTTP Request:
      * POST /example/simple/save
+     * @param {object} dependencies - this param is destructured in this example
+     * @param {object} dependencies.globals - the object passed into the router's constructor
      */
-    save () {
-        // this._options contains the object passed into the router's constructor
+    save ({ globals }) {
+        // globals contains the object passed into the router's constructor
         // if you pass the express's request object into router's contructor, you can then access variable created by middleware
-        // e.g. this._options.request.session, this._options.request.body, this._options.request.cookie etc.
-        this._options.response.json(['save']);
+        // e.g. globals.request.session, globals.request.body, globals.request.cookie etc.
+        globals.response.json(['save']);
     }
 
     /**

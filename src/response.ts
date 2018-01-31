@@ -1,5 +1,5 @@
 export interface IResponse {
-    code: number;
+    code?: number;
     json?: any;
     status?: string;
     file?: {
@@ -19,7 +19,7 @@ export enum ResponseError {
  */
 export class Response {
 
-    private _response: IResponse;
+    private _response: IResponse = {};
 
     /**
      * @returns {object} - last set response. format: { code: number, json?: any, status?: string, file?: { path: string, name?: string } }

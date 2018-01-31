@@ -13,11 +13,10 @@ describe('Response Module', function () {
 
     let response;
 
-    before(() => {
+    // before(() => {});
+    beforeEach(() => {
         response = new Response();
     });
-
-    // beforeEach(() => {});
     // afterEach(() => {});
     // after(() => {});
 
@@ -61,4 +60,7 @@ describe('Response Module', function () {
         expect(response.getResponse()).to.deep.equal({ file: { ...file, type: 'text/html', name: undefined }, code: 201 });
     });
 
+    it('response should return an object when no response is set', () => {
+        expect(response.getResponse()).to.deep.equal({});
+    })
 });
