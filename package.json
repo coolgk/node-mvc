@@ -1,6 +1,6 @@
 {
   "name": "@coolgk/node-mvc",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "Daniel Gong <daniel.k.gong@gmail.com>",
   "homepage": "https://github.com/coolgk/node-mvc.git",
   "bugs": {
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/coolgk/node-mvc.git"
   },
-  "description": "A light javascript / typescript mvc framework that helps you to create object oriented, modulised and testable code",
+  "description": "A light javascript / typescript mvc framework that helps you to create object oriented, modular and testable code",
   "keywords": [
     "mvc",
     "node framework",

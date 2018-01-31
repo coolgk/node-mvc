@@ -47,7 +47,7 @@ createServer(async (request, response) => {
     });
 
     // router.route() returns the return value of the controller method if the return value is not falsy
-    // otherwise it returns an object from formatted by the "response" object (see the README file for @coolgk/mvc/response)
+    // otherwise it returns an object formatted by the "response" object (see the README file for @coolgk/mvc/response)
     // e.g. { code: 200, text: 'SUCCESS' }, { code: 200, json: {...} }, { code: 200, file: { name: ..., path: ... } } etc.
     // this example uses the injected response object for setting up http responese in a standard format
     const result = (await router.route());
