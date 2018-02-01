@@ -2,16 +2,16 @@
 
 `npm install @coolgk/mvc`
 
-A light javascript / typescript mvc framework that helps you to create object oriented, modular and testable code.
+A lightweight javascript / typescript mvc framework that helps you to create object oriented, modular and testable code.
 
 [![Build Status](https://travis-ci.org/coolgk/node-mvc.svg?branch=master)](https://travis-ci.org/coolgk/node-mvc) [![Coverage Status](https://coveralls.io/repos/github/coolgk/node-mvc/badge.svg?branch=develop)](https://coveralls.io/github/coolgk/node-mvc?branch=develop) [![dependencies Status](https://david-dm.org/coolgk/node-mvc/status.svg)](https://david-dm.org/coolgk/node-mvc) [![Known Vulnerabilities](https://snyk.io/test/github/coolgk/node-mvc/badge.svg)](https://snyk.io/test/github/coolgk/node-mvc)
 
-## How this works
+## Documentation
 
 This framework routes HTTP requests to class methods.
 
 e.g.
-**"GET /shop/product/description/1"** calls the **"description"** method in **"/modules/api/controllers/product.js"** (see example code below)
+**"GET /shop/product/description/1"** calls the **"description"** method in "/modules/**shop**/controllers/**product**.js" (see example code below)
 
 In this example request, **"shop"** is a module (folder), **"product"** is a controller (file), **"description"** is an action (method) and **"1"** is a parameter. The format of the request is **/module/[controller]/[action]/[param]**
 
@@ -90,7 +90,7 @@ exports.default = Product;
 
 ### Unit Tests
 
-Dependencies are injected into methods, you can easily mock them for your tests.
+Dependencies are injected into methods, you can easily mock them in your tests.
 
 ### Entry Point (Router)
 
@@ -131,13 +131,14 @@ app.listen(3000);
 
 [JavaScript Examples](https://github.com/coolgk/node-mvc/tree/master/src/examples/javascript)
 
-- [A simple app](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.simple.js)
-- [An example that decouples express from controllers](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.decoupled.js)
-- [An example with session and form data handlers](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.extended.js)
-- [A native node app without express](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.native.js)
+- A simple app: [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.simple.js), [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/simple.js)
+- An example that decouples express from controllers: [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.decoupled.js), [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/decoupled.js)
+- An example with session and form data handlers: [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.extended.js), [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/extended.js)
+- A native node app without express: [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.native.js) [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/extended.js)
 - An example of using RabbitMQ for managing requests
-    - [message pusher](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.rabbitmq.publisher.js)
-    - [single task consumer](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.rabbitmq.consumer.single.task.js)
-    - [catch all consumer](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.rabbitmq.consumer.default.js)
+  - [message pusher](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.rabbitmq.publisher.js)
+  - [single task consumer](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.rabbitmq.consumer.single.task.js)
+  - [catch all consumer](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.rabbitmq.consumer.default.js)
+  - [controller](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/decoupled.js)
 
 [TypeScript Examples](https://github.com/coolgk/node-mvc/tree/master/src/examples/typescript)
