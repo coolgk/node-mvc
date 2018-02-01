@@ -89,10 +89,6 @@ class Product extends Controller {
 exports.default = Product;
 ```
 
-### Unit Tests
-
-Dependencies are injected into methods, you can easily mock them in your tests.
-
 ### Entry Point (Router)
 
 index.js / server.js / bootstrap.js however you name it...
@@ -126,6 +122,62 @@ app.use(async (request, response, next) => {
 });
 
 app.listen(3000);
+```
+
+### Unit Test
+
+Dependencies are injected into methods, you can easily mock them in your tests.
+
+```javascript
+'use strict';
+
+const sinon = require('sinon');
+const expect = require('chai').expect;
+
+describe('Test Example', function () {
+
+    const ControllerClass = require(`../javascript/modules/example/controllers/extended`).default;
+
+    let controller;
+    let params;
+    let response;
+    let services;
+    let globals;
+
+    beforeEach(() => {
+        // initialise controller for each test
+        controller = new ControllerClass();
+        // setup dependencies
+        params = { id: 123 };
+        // create test spy on global dependency: response
+        response = {
+            json: sinon.spy()
+        };
+        // create test stub on global dependency: services
+        services = {
+            model: {
+                getUser: sinon.stub().returns({ name: 'abc' })
+            }
+        };
+        // create test stub on global dependency: globals
+        globals = {
+            session: {
+                getAll: sinon.stub().returns({ session: 'data' })
+            }
+        };
+    });
+
+    it('should should user details', async () => {
+        await controller.user({ params, response, services, globals });
+        expect(services.model.getUser.calledWithExactly(params.id)).to.be.true;
+        expect(globals.session.getAll.calledOnce).to.be.true;
+        expect(response.json.calledWithExactly({
+            user: { name: 'abc' },
+            session: { session: 'data' }
+        })).to.be.true;
+    });
+
+});
 ```
 
 ### More Examples
