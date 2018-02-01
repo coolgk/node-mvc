@@ -17,6 +17,7 @@ In this example request, **"shop"** is a module (folder), **"product"** is a con
 
 The framework looks for files from the folder structure below.
 
+    ./index.js
     ./modules
         /shop
             /controllers

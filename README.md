@@ -2,7 +2,7 @@
 
 `npm install @coolgk/mvc`
 
-A lightweight javascript / typescript mvc framework that helps you to create object oriented, modular and testable code.
+A simple, light javascript / typescript nodejs mvc framework that helps you to create object oriented, modular and testable code.
 
 [![Build Status](https://travis-ci.org/coolgk/node-mvc.svg?branch=master)](https://travis-ci.org/coolgk/node-mvc) [![Coverage Status](https://coveralls.io/repos/github/coolgk/node-mvc/badge.svg?branch=develop)](https://coveralls.io/github/coolgk/node-mvc?branch=develop) [![dependencies Status](https://david-dm.org/coolgk/node-mvc/status.svg)](https://david-dm.org/coolgk/node-mvc) [![Known Vulnerabilities](https://snyk.io/test/github/coolgk/node-mvc/badge.svg)](https://snyk.io/test/github/coolgk/node-mvc)
 
@@ -17,6 +17,7 @@ In this example request, **"shop"** is a module (folder), **"product"** is a con
 
 The framework looks for files from the folder structure below.
 
+    ./index.js
     ./modules
         /shop
             /controllers
