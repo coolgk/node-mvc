@@ -19,7 +19,7 @@ const app = express();
 
 app.use(async (request, response, next) => {
 
-    // initilaise session
+    // initialise session
     // see @coolgk/session https://www.npmjs.com/package/@coolgk/session
     const session = new Session({
         redisClient: createClient(config.redis),

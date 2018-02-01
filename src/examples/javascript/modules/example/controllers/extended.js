@@ -70,18 +70,18 @@ class Extended extends Controller {
         const post = await globals.formdata.getData();
 
         if (!post.username || !post.password) {
-            response.json({error: 'username and password are required'});
+            response.json({ error: 'username and password are required' });
             return;
         }
 
         // call the authUser() method from the model (dependency)
-        const loggedIn = await services.model.authUser({username: post.username, password: post.password});
+        const loggedIn = await services.model.authUser({ username: post.username, password: post.password });
 
         if (loggedIn) {
             // start a session
             const accessToken = await globals.session.init();
             // set session data
-            await globals.session.set('user', {username: post.username, password: post.password});
+            await globals.session.set('user', { username: post.username, password: post.password });
             // set response
             response.json({ accessToken });
         }
@@ -134,7 +134,7 @@ class Extended extends Controller {
     async user ({ params, response, services, globals }) {
         // user() method has :id configured as a param in getRoutes()
         if (!params.id) {
-            response.json({error: 'missing user id'});
+            response.json({ error: 'missing user id' });
             return;
         }
 

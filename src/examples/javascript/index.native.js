@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * an extended example of using the @coolgk/mvc framework with session and form data handlers
+ * an example of a native app using the @coolgk/mvc framework without express
  */
 const { createClient } = require('redis');
 
@@ -18,7 +18,7 @@ const { createReadStream, stat } = require('fs');
 const { basename } = require('path');
 
 createServer(async (request, response) => {
-    // initilaise session
+    // initialise session
     // see @coolgk/session https://www.npmjs.com/package/@coolgk/session
     const session = new Session({
         redisClient: createClient(config.redis),
