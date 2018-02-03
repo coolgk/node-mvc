@@ -31,7 +31,7 @@ The framework looks for files from the folder structure below.
 
 ### Controller
 
-The controller module must export a **"default"** property which is a class that extends the base **"Controller"** class from @coolgk/mvc/controller. Folder (module), file (controller) and method (action) names must be in lowercase and without special characters `/[_a-zA-Z0-9\-]/` or camelCase if request contains hyphens e.g. **action-one** is converted to **actionOne**
+The controller module must export a **"default"** property which is a class that extends the base **"Controller"** class from @coolgk/mvc/controller. Folder (module), file (controller) and method (action) names must be in lowercase without special characters except for hyphens `/[a-z\-]/` or camelCase if a request contains hyphens e.g. **action-one** is converted to **actionOne**
 
 **product.js** controller example
 
@@ -135,7 +135,7 @@ const sinon = require('sinon');
 const expect = require('chai').expect;
 
 describe('Test Example', function () {
-
+    // https://github.com/coolgk/node-mvc/tree/master/src/examples
     const ControllerClass = require(`../javascript/modules/example/controllers/extended`).default;
 
     let controller;
@@ -167,7 +167,7 @@ describe('Test Example', function () {
         };
     });
 
-    it('should should user details', async () => {
+    it('should show user name and session', async () => {
         await controller.user({ params, response, services, globals });
         expect(services.model.getUser.calledWithExactly(params.id)).to.be.true;
         expect(globals.session.getAll.calledOnce).to.be.true;
@@ -184,10 +184,18 @@ describe('Test Example', function () {
 
 [JavaScript Examples](https://github.com/coolgk/node-mvc/tree/master/src/examples/javascript)
 
-- A simple app: [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.simple.js), [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/simple.js)
-- An example that decouples express from controllers: [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.decoupled.js), [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/decoupled.js)
-- An example with session and form data handlers: [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.extended.js), [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/extended.js)
-- A native node app without express: [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.native.js) [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/extended.js)
+- A simple app
+  - [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.simple.js)
+  - [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/simple.js)
+- An example that decouples express from controllers
+  - [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.decoupled.js)
+  - [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/decoupled.js)
+- An example with session and form data handlers
+  - [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.extended.js)
+  - [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/extended.js)
+- A native node app without express
+  - [Entry Point](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.native.js)
+  - [Controller File](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/extended.js)
 - An example of using RabbitMQ for managing requests
   - [message pusher](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.express.rabbitmq.publisher.js)
   - [single task consumer](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/index.rabbitmq.consumer.single.task.js)
