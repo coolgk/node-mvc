@@ -78,7 +78,7 @@ class Product extends Controller {
     getPermissions () {
         return {
             // * the is default permission for all methods in this class
-            // this can be used for checking sessions e.g. if user has logged in
+            // can be used for checking app level permissions e.g. login sessions etc.
             '*': () => false, // false = deny all by default
             // true or Promise<true>: skip permission check for the description() method
             'description': () => true
@@ -91,7 +91,7 @@ exports.default = Product;
 
 ### Entry Point (Router)
 
-index.js / server.js / bootstrap.js however you name it...
+index.js / server.js however you name it...
 
 An example of using express with this framework
 
@@ -105,14 +105,14 @@ app.use(async (request, response, next) => {
 
     // initialise router
     const router = new Router({
-        rootDir: __dirname, // required param
-        url: request.originalUrl, // required param
-        method: request.method, // required param
+        rootDir: __dirname, // required
+        url: request.originalUrl, // required
+        method: request.method, // required
         response // you can pass anything into router, these variables are injected into controllers methods in globals
     });
 
     // router.route() returns the return value of the controller method if the return value is not falsy
-    // otherwise it returns an object formatted by the "response" object (see the README file for @coolgk/mvc/response)
+    // otherwise it returns an object formatted by the "response" object (see the documention for @coolgk/mvc/response at the bottom)
     // e.g. { code: 200, text: 'SUCCESS' }, { code: 200, json: {...} }, { code: 200, file: { name: ..., path: ... } } etc.
     const result = (await router.route());
 
@@ -135,7 +135,8 @@ const sinon = require('sinon');
 const expect = require('chai').expect;
 
 describe('Test Example', function () {
-    // https://github.com/coolgk/node-mvc/tree/master/src/examples
+    // this test is for the example code in https://github.com/coolgk/node-mvc/tree/master/src/examples
+    // i.e. not the product.js controller above
     const ControllerClass = require(`../javascript/modules/example/controllers/extended`).default;
 
     let controller;
@@ -145,7 +146,7 @@ describe('Test Example', function () {
     let globals;
 
     beforeEach(() => {
-        // initialise controller for each test
+        // initialise controller for each test case
         controller = new ControllerClass();
         // setup dependencies
         params = { id: 123 };
@@ -153,7 +154,7 @@ describe('Test Example', function () {
         response = {
             json: sinon.spy()
         };
-        // create test stub on global dependency: services
+        // create test stub on local dependency: services
         services = {
             model: {
                 getUser: sinon.stub().returns({ name: 'abc' })
@@ -203,6 +204,7 @@ describe('Test Example', function () {
   - [controller](https://github.com/coolgk/node-mvc/blob/master/src/examples/javascript/modules/example/controllers/decoupled.js)
 
 [TypeScript Examples](https://github.com/coolgk/node-mvc/tree/master/src/examples/typescript)
+TypeScript version of the examples above
 
 
 Report bugs here: [https://github.com/coolgk/node-mvc/issues](https://github.com/coolgk/node-mvc/issues)
@@ -336,7 +338,7 @@ set a file download response
 | options | <code>object</code> |  |
 | options.url | <code>string</code> | request.url or request.originalUrl from expressjs |
 | options.method | <code>string</code> | http request method GET POST etc |
-| options.rootDir | <code>string</code> | rood dir of the app |
+| options.rootDir | <code>string</code> | root dir of the app |
 | [options.urlParser] | <code>function</code> | a callback for parsing url params e.g. /api/user/profile/:userId. default parser: @coolgk/url |
 
 <a name="Router+route"></a>
@@ -350,4 +352,4 @@ this method routes urls like /moduleName/controllerName/action/param1/params2 to
 
 ### router.getModuleControllerAction() ⇒ <code>object</code>
 **Kind**: instance method of [<code>Router</code>](#Router)  
-**Returns**: <code>object</code> - - {module, controller, action, originalModule, originalController, originalAction} originals are values before they are santised and transformed e.g. /module.../ConTroller/action-one -> {action: 'module', controller: 'controller', action: 'actionOne', originalModule: 'module...', controller: 'ConTroller', action: 'action-one' }  
+**Returns**: <code>object</code> - - {module, controller, action, originalModule, originalController, originalAction} originals are values before they are santised and transformed e.g. /module.../ConTroller/action-one -> {action: 'module', controller: 'controller', action: 'actionOne', originalModule: 'module...', originalController: 'ConTroller', originalAction: 'action-one' }  
