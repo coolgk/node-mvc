@@ -36,7 +36,7 @@ export class Router {
      * @param {object} options
      * @param {string} options.url - request.url or request.originalUrl from expressjs
      * @param {string} options.method - http request method GET POST etc
-     * @param {string} options.rootDir - rood dir of the app
+     * @param {string} options.rootDir - root dir of the app
      * @param {function} [options.urlParser] - a callback for parsing url params e.g. /api/user/profile/:userId. default parser: @coolgk/url
      */
     /* tslint:enable */
@@ -92,7 +92,7 @@ export class Router {
 
     /* tslint:disable */
     /**
-     * @returns {object} - {module, controller, action, originalModule, originalController, originalAction} originals are values before they are santised and transformed e.g. /module.../ConTroller/action-one -> {action: 'module', controller: 'controller', action: 'actionOne', originalModule: 'module...', controller: 'ConTroller', action: 'action-one' }
+     * @returns {object} - {module, controller, action, originalModule, originalController, originalAction} originals are values before they are santised and transformed e.g. /module.../ConTroller/action-one -> {action: 'module', controller: 'controller', action: 'actionOne', originalModule: 'module...', originalController: 'ConTroller', originalAction: 'action-one' }
      * @memberof Router
      */
     /* tslint:enable */
