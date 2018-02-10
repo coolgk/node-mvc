@@ -2,7 +2,7 @@
 
 `npm install @coolgk/mvc`
 
-A simple, light javascript / typescript nodejs mvc framework that helps you to create object oriented, modular and testable code.
+A simple, lightweight javascript / typescript nodejs mvc framework that helps you to create object oriented, modular and testable code.
 
 [![Build Status](https://travis-ci.org/coolgk/node-mvc.svg?branch=master)](https://travis-ci.org/coolgk/node-mvc) [![Coverage Status](https://coveralls.io/repos/github/coolgk/node-mvc/badge.svg?branch=develop)](https://coveralls.io/github/coolgk/node-mvc?branch=develop) [![dependencies Status](https://david-dm.org/coolgk/node-mvc/status.svg)](https://david-dm.org/coolgk/node-mvc) [![Known Vulnerabilities](https://snyk.io/test/github/coolgk/node-mvc/badge.svg)](https://snyk.io/test/github/coolgk/node-mvc)
 
@@ -31,7 +31,7 @@ The framework looks for files from the folder structure below.
 
 ### Controller
 
-The controller module must export a **"default"** property which is a class that extends the base **"Controller"** class from @coolgk/mvc/controller. Folder (module), file (controller) and method (action) names must be in lowercase without special characters except for hyphens `/[a-z\-]/` or camelCase if a request contains hyphens e.g. **action-one** is converted to **actionOne**
+The controller module must export a **"default"** property which is a class that extends the base **"Controller"** class from @coolgk/mvc/controller. Folder (module), file (controller) and method (action) names must be in lowercase without special characters except for hyphens and numbers `/[a-z0-9\-]/` or in camelCase if a request contains hyphens e.g. **action-one** is converted to **actionOne**
 
 **product.js** controller example
 
