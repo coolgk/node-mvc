@@ -35,15 +35,15 @@ app.use(async (request, response, next) => {
 
     // setup router
     const router = new Router({
-        rootDir: __dirname, // required param
-        url: request.originalUrl, // required param
-        method: request.method, // required param
+        rootDir: __dirname, // required
+        url: request.originalUrl, // required
+        method: request.method, // required
         // setup form data handler for 'application/json', 'application/x-www-form-urlencoded' and 'multipart/form-data'
         // see @coolgk/formdata https://www.npmjs.com/package/@coolgk/formdata
-        formdata: formData(request, { dir: config.uploadDir }), // pass formdata in as global a dependency
-        // pass session in as global a dependency
+        formdata: formData(request, { dir: config.uploadDir }), // pass formdata in as a global dependency
+        // pass session in as a global dependency
         session,
-        config, // pass app config in as global a dependency
+        config, // pass app config in as a global dependency
         ip: request.ip // pass ip address into router (controller methods)
     });
 
