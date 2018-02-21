@@ -1,3 +1,8 @@
+/*!
+ *  Copyright (c) 2017 Daniel Gong <daniel.k.gong@gmail.com>. All rights reserved.
+ *  Licensed under the MIT License.
+ */
+
 export interface IResponse {
     code?: number;
     json?: any;

@@ -1,4 +1,9 @@
-﻿import { access, constants } from 'fs';
+﻿/*!
+ *  Copyright (c) 2017 Daniel Gong <daniel.k.gong@gmail.com>. All rights reserved.
+ *  Licensed under the MIT License.
+ */
+
+import { access, constants } from 'fs';
 import { Response } from './response';
 import { getParams, IParams } from '@coolgk/url';
 import { IDependencies } from './controller';

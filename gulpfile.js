@@ -24,6 +24,10 @@ const codeHeader = `/*!
  * @version ${packageJson.version}
  * @link ${packageJson.homepage}
  * @license ${packageJson.license}
+ * @author ${packageJson.author}
+ *
+ * Copyright (c) 2017 ${packageJson.author}. All rights reserved.
+ * Licensed under the MIT License.
  */
 
 `;
@@ -52,6 +56,8 @@ async function generatePackage () {
     await copyFilesToPackage();
     // cp simplified package.json to package/
     await createPackageJson();
+    // cp licence file
+    await createLicence(packageFolder);
 }
 
 function createFolder (path) {
@@ -189,6 +195,14 @@ function createPackageJson () {
                 resolve();
             }
         );
+    });
+}
+
+function createLicence (packageFolder) {
+    return new Promise((resolve, reject) => {
+        fs.createReadStream('./LICENSE').pipe(
+            fs.createWriteStream(`${packageFolder}/LICENSE`)
+        ).on('finish', resolve).on('error', reject);
     });
 }
 
