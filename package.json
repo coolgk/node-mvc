@@ -2,7 +2,7 @@
   "name": "@coolgk/node-mvc",
   "version": "1.0.13",
   "author": "Daniel Gong <daniel.k.gong@gmail.com>",
-  "homepage": "https://github.com/coolgk/node-mvc.git",
+  "homepage": "https://github.com/coolgk/node-mvc",
   "bugs": {
     "url": "https://github.com/coolgk/node-mvc/issues"
   },
