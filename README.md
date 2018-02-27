@@ -206,6 +206,15 @@ describe('Test Example', function () {
 [TypeScript Examples](https://github.com/coolgk/node-mvc/tree/master/src/examples/typescript)
 TypeScript version of the examples above
 
+## Also See
+
+### [@coolgk/mongo](https://www.npmjs.com/package/@coolgk/mongo)
+
+A javascript / typescript MongoDB modelling library which enables joins in collections, simplifies CRUD operations for sub / nested documents and implements schema based data validation.
+
+### [@coolgk/utils](https://www.npmjs.com/package/@coolgk/utils)
+
+A javascript / typescript utility library. Modules: array, string, base64, ampq, bcrypt, cache, captcha, csv, email, jwt, number, pdf, tmp, token, unit conversion, url params, session, form data
 
 Report bugs here: [https://github.com/coolgk/node-mvc/issues](https://github.com/coolgk/node-mvc/issues)
 
