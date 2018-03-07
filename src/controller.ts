@@ -16,6 +16,8 @@ export interface IPermissions {
     [key: string]: () => Promise<boolean> | boolean;
 }
 
+export { IParams, Response };
+
 export interface IDependencies {
     params: IParams;
     response: Response;
