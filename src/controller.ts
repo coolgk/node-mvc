@@ -19,9 +19,9 @@ export interface IPermissions {
 export { IParams, Response };
 
 export interface IDependencies {
-    params: IParams;
-    response: Response;
-    globals: any;
+    params?: IParams;
+    response?: Response;
+    globals?: any;
     services?: any;
 }
 
