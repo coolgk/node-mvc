@@ -78,7 +78,7 @@ export class Router {
                     response,
                     globals: this._options
                 };
-                dependencies.services = controllerObject.getServices(dependencies);
+                dependencies.services = await controllerObject.getServices(dependencies);
 
                 const permissions = controllerObject.getPermissions(dependencies);
                 const permission = permissions[action] || permissions['*'];
