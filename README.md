@@ -224,27 +224,6 @@ Report bugs here: [https://github.com/coolgk/node-mvc/issues](https://github.com
 Base controller class
 
 **Kind**: global class  
-
-* [Controller](#Controller)
-    * [.getRoutes()](#Controller+getRoutes) ⇒ <code>object</code>
-    * [.getPermissions(dependencies)](#Controller+getPermissions) ⇒ <code>object</code>
-    * [.getServices(dependencies)](#Controller+getServices) ⇒ <code>object</code>
-
-<a name="Controller+getRoutes"></a>
-
-### controller.getRoutes() ⇒ <code>object</code>
-**Kind**: instance method of [<code>Controller</code>](#Controller)  
-**Returns**: <code>object</code> - - routes that can access controller methods. Format: { [HTTP_METHOD]: { [CLASS_METHOD_NAME]: [PARAM_PATTERN], ... } }  
-<a name="Controller+getPermissions"></a>
-
-### controller.getPermissions(dependencies) ⇒ <code>object</code>
-**Kind**: instance method of [<code>Controller</code>](#Controller)  
-**Returns**: <code>object</code> - - { [CLASS_METHOD_NAME]: [CALLBACK], ... } the callback should return a boolean or Promise<boolean>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| dependencies | <code>object</code> | global dependencies passed into the router's controller |
-
 <a name="Controller+getServices"></a>
 
 ### controller.getServices(dependencies) ⇒ <code>object</code>
@@ -328,37 +307,3 @@ set a file download response
 | [type] | <code>string</code> |  | mime type |
 | [code] | <code>number</code> | <code>200</code> | http status code |
 
-<a name="Router"></a>
-
-## Router
-**Kind**: global class  
-
-* [Router](#Router)
-    * [new Router(options)](#new_Router_new)
-    * [.route()](#Router+route) ⇒ <code>promise</code>
-    * [.getModuleControllerAction()](#Router+getModuleControllerAction) ⇒ <code>object</code>
-
-<a name="new_Router_new"></a>
-
-### new Router(options)
-
-| Param | Type | Description |
-| --- | --- | --- |
-| options | <code>object</code> |  |
-| options.url | <code>string</code> | request.url or request.originalUrl from expressjs |
-| options.method | <code>string</code> | http request method GET POST etc |
-| options.rootDir | <code>string</code> | root dir of the app |
-| [options.urlParser] | <code>function</code> | a callback for parsing url params e.g. /api/user/profile/:userId. default parser: @coolgk/url |
-
-<a name="Router+route"></a>
-
-### router.route() ⇒ <code>promise</code>
-this method routes urls like /moduleName/controllerName/action/param1/params2 to file modules/modulename/controllers/controllerName.js
-
-**Kind**: instance method of [<code>Router</code>](#Router)  
-**Returns**: <code>promise</code> - - returns a controller method's return value if the return value is not falsy otherwise returns standard response object genereated from the response methods called inside the controller methods e.g. response.json({...}), response.file(path, name) ...see code examples in decoupled.ts/js or full.ts/js  
-<a name="Router+getModuleControllerAction"></a>
-
-### router.getModuleControllerAction() ⇒ <code>object</code>
-**Kind**: instance method of [<code>Router</code>](#Router)  
-**Returns**: <code>object</code> - - {module, controller, action, originalModule, originalController, originalAction} originals are values before they are santised and transformed e.g. /module.../ConTroller/action-one -> {action: 'module', controller: 'controller', action: 'actionOne', originalModule: 'module...', originalController: 'ConTroller', originalAction: 'action-one' }  
