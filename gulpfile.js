@@ -34,9 +34,9 @@ const codeHeader = `/*!
 
 gulp.task('package', generatePackage);
 
-gulp.task('publish', ['package'], () => {
+gulp.task('publish', gulp.series('package', () => {
     return execCommand(`cd ${packageFolder} && npm publish --access=public`);
-});
+}));
 
 async function generatePackage () {
     // del /package folder
